@@ -1,5 +1,0 @@
-
-    "default_popup": "popup1111.html"
-
-  "icons": { "128": "./assets/img/icon_128.png" },
-  "permissions": ["activeTab"]
