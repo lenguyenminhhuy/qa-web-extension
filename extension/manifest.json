@@ -1,0 +1,32 @@
+{
+    "manifest_version": 2,
+    "name": "Machine Reading",
+    "description": "blah blah ........",
+    "version": "1.0",
+    "content_scripts": 
+    [
+        {
+        "matches": ["<all_urls>"],
+        "js": ["./assets/scripts/content.js"],
+        "run_at": "document_end"
+        }
+    ],
+
+    "permissions": [
+        "tabs",
+        "background"  
+    ],
+
+    "icons": {
+    },
+
+    "background": {
+        "scripts": []
+    },
+
+    "browser_action": {       
+        "default_icon": "./assets/images/icon.png",
+        "default_title": "Read for me",
+        "default_popup": "popup.html"
+    }
+}
