@@ -30,11 +30,11 @@ After press <kbd>enter</kbd>, the extension return result that is whole of the a
 
 If you want to install it manually. First clone or fork the repo. Then, access your [Chrome Extensions page](chrome://extensions/), make sure "Developer mode" is checked. You can then click the `Load unpacked` button and browse to the "src" directory of this repo.
 
-<img src="assets/images/loadext.png" width="981" />
+<img src="./assets/images/loadext.png" width="981" />
 
 Once you've made changes to the extension, go back to the Extensions page and click the Reload link under the extension entry.
 
-<img src="assets/images/reload.png" width="410" />
+<img src="./assets/images/reload.png" width="410" />
 
 
 ## License
