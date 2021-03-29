@@ -1,17 +1,39 @@
 // content script 
 //---------------------------------------------------------------
 // content script received message from popup
+const trustedURLs = ['www.theguardian.com', 'www.bbc.com'];
+var host = location.hostname;
+var data = {};
+
 chrome.runtime.onMessage.addListener(
       function(request, sender, sendResponse) {
-        if( request.txt === "hello" ) {
-            // most of webpage use <p> for containing the article
-            let allParagraphs = document.querySelectorAll('body div p');
-            var data = {};
-            var index = 0;
-            
+        if(request.txt === "hello" ) {
+            if(!trustedURLs.includes(host)) {
+                alert("MRC system has not been optimized for this webpage.\nThe result can be incorrect or null.")
+            }
+
+            var target;
+            switch (host) {
+                case 'www.theguardian.com':
+                    target = 'body h1, main>div>div>p'
+                    break;
+                case 'www.bbc.com':
+                    target = '.article-headline__text.b-reith-sans-font.b-font-weight-300, .article__intro.b-font-family-serif:first-child, .body-text-card__text.body-text-card__text--future.body-text-card__text--flush-text>div>p';
+                    break;
+                
+                default:
+                    target = 'body div p'
+                    break;
+            }
+
+            var allParagraphs = document.querySelectorAll(target);
+            cleanParagraphs(allParagraphs)
+
             // save text type paragraphs to data
+            var index = 0;
             for (paragraph of allParagraphs) {
                 data[index] = paragraph.innerText;
+                data[index] = data[index].replace(/(\r\n|\n|\r)/gm, "");
                 index++;
             }
 
@@ -20,13 +42,13 @@ chrome.runtime.onMessage.addListener(
 
             // change to json
             var jsonData = JSON.stringify(data);
-            console.log(jsonData);
 
             // download json file of data
             download(jsonData, "data.json", "application/json");
         }
     }
 );
+
 
 // function for creating file and downloading
 function download(content, fileName, contentType) {
