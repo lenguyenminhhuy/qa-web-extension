@@ -18,7 +18,7 @@ chrome.runtime.onMessage.addListener(
                     target = 'body h1, main>div>div>p'
                     break;
                 case 'www.bbc.com':
-                    target = '.article-headline__text.b-reith-sans-font.b-font-weight-300, .article__intro.b-font-family-serif:first-child, .body-text-card__text.body-text-card__text--future.body-text-card__text--flush-text>div>p';
+                    target = 'article h1, div>p';
                     break;
                 
                 default:
@@ -27,7 +27,6 @@ chrome.runtime.onMessage.addListener(
             }
 
             var allParagraphs = document.querySelectorAll(target);
-            cleanParagraphs(allParagraphs)
 
             // save text type paragraphs to data
             var index = 0;
@@ -42,6 +41,7 @@ chrome.runtime.onMessage.addListener(
 
             // change to json
             var jsonData = JSON.stringify(data);
+            console.log(jsonData);
 
             // download json file of data
             download(jsonData, "data.json", "application/json");
