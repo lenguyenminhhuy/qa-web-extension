@@ -1,0 +1,7 @@
+{
+ "model_name":"distilbert-base-uncased",
+ "mode":"question_answering",
+ "save_mode":"pretrained",
+ "max_length":384,
+ "doc_stride": 128
+}
