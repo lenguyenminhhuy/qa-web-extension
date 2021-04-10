@@ -42,3 +42,7 @@ Once you've made changes to the extension, go back to the Extensions page and cl
 ## License
 
 This project is licensed under [SEPM-Team24 License]()
+
+## Problems
+Sending the second times does not work because of the wrong context
+Model does not work well with the news

@@ -94,11 +94,16 @@ class TransformersQuestionAnsweringHandler(BaseHandler, ABC):
 
     def preprocess(self, requests):
         logger.info(requests)
-        input_text = requests[0].get("data")
-        if input_text is None:
-            input_text = requests[0].get("body")
-        if isinstance(input_text, (bytes, bytearray)):
-            input_text = input_text.decode("utf-8")
+        # input_text = requests[0].get("data")
+        # if input_text is None:
+        input_text = requests[0].get("body")
+        # input_text = json.loads(input_text)
+        logger.info(
+            input_text
+        )
+
+        # if isinstance(input_text, (bytes, bytearray)):
+        #     input_text = input_text.decode("utf-8")
 
         max_length = self.setup_config["max_length"]
         doc_stride = self.setup_config["doc_stride"]
@@ -106,9 +111,9 @@ class TransformersQuestionAnsweringHandler(BaseHandler, ABC):
             "Received text: '%s'", input_text
         )  # '{"question" :"How is the weather", "context": "The weather is nice, it is beautiful day"}'
         # preprocessing text
-        input_text = ast.literal_eval(
-            input_text
-        )  # Transform string to dictionary {"question" :"How is the weather", "context": "The weather is nice, it is beautiful day"}
+        # input_text = ast.literal_eval(
+        # input_text
+        # )  # Transform string to dictionary {"question" :"How is the weather", "context": "The weather is nice, it is beautiful day"}
         question = input_text["question"]  # "How is the weather"
         context = input_text["context"]  # "The weather is nice, it is beautiful day"
 
