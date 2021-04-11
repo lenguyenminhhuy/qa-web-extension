@@ -13,6 +13,22 @@ const testQuestion = "Who is the first president of the United States?";
 const trustedURLs = ['www.theguardian.com', 'www.bbc.com', '127.0.0.1'];
 var host = location.hostname;
 
+var target;
+switch (host) {
+    case 'www.theguardian.com':
+        target = 'body h1, main>div>div>p'
+        break;
+    case 'www.bbc.com':
+        target = 'article h1, div>p';
+        break;
+    
+    default:
+        target = 'body div p'
+        break;
+}
+
+var allParagraphs = document.querySelectorAll(target);
+
 chrome.runtime.onMessage.addListener(
       function(request, sender, sendResponse) {
         if(request.txt === "hello" ) {
@@ -20,21 +36,6 @@ chrome.runtime.onMessage.addListener(
                 alert("MRC system has not been optimized for this webpage.\nThe result can be incorrect or null.")
             }
             var data = {};
-            var target;
-            switch (host) {
-                case 'www.theguardian.com':
-                    target = 'body h1, main>div>div>p'
-                    break;
-                case 'www.bbc.com':
-                    target = 'article h1, div>p';
-                    break;
-                
-                default:
-                    target = 'body div p'
-                    break;
-            }
-
-            var allParagraphs = document.querySelectorAll(target);
 
             // save text type paragraphs to data
             var index = 0;
@@ -108,12 +109,44 @@ chrome.runtime.onMessage.addListener(
             // download(jsonData, "data.json", "application/json");
 
             // highlight answers and scroll to the first one 
-            highlight(index, response.data.index_0, response.data.index_0)
-            scrolling(index)
+            highlight(index1, response.data.index_0, response.data.index_0)
+            highlight(index2, response.data.index_1, response.data.index_1)
+            highlight(index3, response.data.index_2, response.data.index_2)
+
+            scrolling(index1)
 
         }
     }
 );
+
+// -----------------------------------------------------------------------------------------------    
+// Scroll up/down to the answer
+chrome.runtime.onMessage.addListener(
+    function(request, sender, sendResponse) {
+        if(request.txt === "down") {
+            if(index1) {
+                scrolling(index2)
+            } else if (index2) {
+                scrolling(index3)
+            }
+        } else if (request.txt === "up") {
+            if(index3) {
+                scrolling(index2)
+            } else if (index2) {
+                scrolling(index1)
+            }
+        } else {
+            scrolling(-1)
+        }
+    }
+)
+
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------    
 // Function to get index of the paragraph
 function getParagraphIndex(answerIndexes, paragraphStartIndexes) {
     let answerStartIndex = answerIndexes[0]; // get the start index from the answerIndexes
@@ -128,6 +161,7 @@ function getParagraphIndex(answerIndexes, paragraphStartIndexes) {
     return paragraphIndex;
 }
 
+// binary search
 function binarySearch(value, indexArr) {
     let low = 0;
     let high = indexArr.length - 1;
@@ -148,6 +182,8 @@ function binarySearch(value, indexArr) {
     return mid;
 }
 
+// -----------------------------------------------------------------------------------------------    
+// Function to highlight the answer in the paragraph
 function highlight(paraIndex, responseStartIdx, responseEndIdx) {
     innerHTML = allParagraphs[paraIndex].innerHTML
     var color = "#ff0000";
@@ -155,16 +191,8 @@ function highlight(paraIndex, responseStartIdx, responseEndIdx) {
     allParagraphs[paraIndex].innerHTML = innerHTML;
 }
 
+// -----------------------------------------------------------------------------------------------    
+// Function to smooth scroll
 function scrolling(paraIndex) {
     allParagraphs[paraIndex].scrollIntoView({behavior: 'smooth', block:'center'})
 }
-
-
-// // function for creating file and downloading
-// function download(content, fileName, contentType) {
-//     var a = document.createElement("a");
-//     var file = new Blob([content], {type: contentType});
-//     a.href = URL.createObjectURL(file);
-//     a.download = fileName;
-//     a.click();
-// }

@@ -17,6 +17,8 @@ document.addEventListener("DOMContentLoaded", function() {
             // document.getElementById("button1").click();
             popup();
         }
+        document.getElementById("down").addEventListener("click", scrollDown);
+        document.getElementById("up").addEventListener("click", scrollUp);
     });
 //----------------------------------------------------------------------------
 });
@@ -32,6 +34,30 @@ function popup() {
             let msg = {
                 txt: "hello",
                 question: question
+            }
+        // send message
+        chrome.tabs.sendMessage(tabs[0].id, msg)
+    });
+}
+
+function scrollDown() {
+    chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
+        var activeTab = tabs[0];
+        console.log(tabs[0]);
+            let msg = {
+                txt: "down",
+            }
+        // send message
+        chrome.tabs.sendMessage(tabs[0].id, msg)
+    });
+}
+
+function scrollUp() {
+    chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
+        var activeTab = tabs[0];
+        console.log(tabs[0]);
+            let msg = {
+                txt: "up",
             }
         // send message
         chrome.tabs.sendMessage(tabs[0].id, msg)
