@@ -74,7 +74,7 @@ chrome.runtime.onMessage.addListener(
                         context += value + "\n"
                     }
                 }
-            })             
+            })
 
             // Send to server
             // question = testQuestion;
@@ -106,6 +106,11 @@ chrome.runtime.onMessage.addListener(
 
             // download json file of data
             // download(jsonData, "data.json", "application/json");
+
+            // highlight answers and scroll to the first one 
+            highlight(index, response.data.index_0, response.data.index_0)
+            scrolling(index)
+
         }
     }
 );
@@ -143,11 +148,23 @@ function binarySearch(value, indexArr) {
     return mid;
 }
 
-// function for creating file and downloading
-function download(content, fileName, contentType) {
-    var a = document.createElement("a");
-    var file = new Blob([content], {type: contentType});
-    a.href = URL.createObjectURL(file);
-    a.download = fileName;
-    a.click();
+function highlight(paraIndex, responseStartIdx, responseEndIdx) {
+    innerHTML = allParagraphs[paraIndex].innerHTML
+    var color = "#ff0000";
+    innerHTML = innerHTML.substring(0,responseStartIdx) + "<span style='background-color: " + color + ";'>" + innerHTML.substring(responseStartIdx,responseEndIdx) + "</span>" + innerHTML.substring(responseEndIdx);
+    allParagraphs[paraIndex].innerHTML = innerHTML;
 }
+
+function scrolling(paraIndex) {
+    allParagraphs[paraIndex].scrollIntoView({behavior: 'smooth', block:'center'})
+}
+
+
+// // function for creating file and downloading
+// function download(content, fileName, contentType) {
+//     var a = document.createElement("a");
+//     var file = new Blob([content], {type: contentType});
+//     a.href = URL.createObjectURL(file);
+//     a.download = fileName;
+//     a.click();
+// }
