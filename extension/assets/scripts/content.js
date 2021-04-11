@@ -141,11 +141,6 @@ chrome.runtime.onMessage.addListener(
     }
 )
 
-
-
-
-
-
 // -----------------------------------------------------------------------------------------------    
 // Function to get index of the paragraph
 function getParagraphIndex(answerIndexes, paragraphStartIndexes) {

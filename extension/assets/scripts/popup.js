@@ -1,10 +1,10 @@
 // popup script
 //-------------------------------------------------------------------------------
 document.addEventListener("DOMContentLoaded", function() {
-//------------------------------Use button-----------------------------------
-    // // listen to event by clicking the button in popup
+//------------------------------Use button---------------------------------------
+    // listen to event by clicking the button in popup
     // document.getElementById("button1").addEventListener("click", popup);
-//------------------------------Use enter------------------------------------
+//------------------------------Use enter----------------------------------------
 // Get the input field
     var search = document.getElementById("search-bar");
     // Execute a function when the user releases a key on the keyboard
@@ -14,16 +14,13 @@ document.addEventListener("DOMContentLoaded", function() {
             // Cancel the default action, if needed
             event.preventDefault();
             // Trigger the button element with a click
-            // document.getElementById("button1").click();
             popup();
         }
         document.getElementById("down").addEventListener("click", scrollDown);
         document.getElementById("up").addEventListener("click", scrollUp);
     });
-//----------------------------------------------------------------------------
 });
-
-
+//-------------------------------------------------------------------------------
 function popup() {
     var question = document.getElementById("search-bar").value;
     console.log(question);
