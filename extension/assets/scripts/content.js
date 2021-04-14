@@ -61,7 +61,7 @@ chrome.runtime.onMessage.addListener(
                 let value = item[1];
                 if (index == 0) {
                     paragraphStartIndexes.push(0)
-                    context += value + "\n"
+                    context += value + "\n";
                 } else {
                     let len = arrData[index-1][1].length
                     if (len == 0) {
@@ -71,7 +71,7 @@ chrome.runtime.onMessage.addListener(
                     }
                     
                     if (value !== "") {
-                        context += value + "\n"
+                        context += value + "\n";
                     }
                 }
             })             
@@ -93,19 +93,28 @@ chrome.runtime.onMessage.addListener(
             console.log("Sending...")
             axios(config)
             .then(function (response) {
-                //console.log(response.data);
-                console.log(paragraphStartIndexes);
-                let index = getParagraphIndex(response.data.index_0, paragraphStartIndexes);
-                console.log(`Paragraph index: ${index}`);
+                console.log(response.data);
+                // console.log(paragraphStartIndexes);
+                let firstParaIndex = getParagraphIndex(response.data.index_0, paragraphStartIndexes);
+                // console.log(`Paragraph index: ${index}`);
+                // console.log(`Answer: ${context.slice(response.data.index_0[0], response.data.index_0[1])}`);
+                // console.log(`Answer: ${context.slice(response.data.index_1[0], response.data.index_1[1])}`);
+                // console.log(`Answer: ${context.slice(response.data.index_2[0], response.data.index_2[1])}`);
+                highlight(firstParaIndex, response.data.index_0, allParagraphs, paragraphStartIndexes);
                 console.log(`Answer: ${context.slice(response.data.index_0[0], response.data.index_0[1])}`);
-                console.log(`Answer: ${context.slice(response.data.index_1[0], response.data.index_1[1])}`);
-                console.log(`Answer: ${context.slice(response.data.index_2[0], response.data.index_2[1])}`);
+                let indexArr = Object.values(response.data)
+                // indexArr.map(function(index) {
+                //     let paraIndex = getParagraphIndex(index, paragraphStartIndexes);
+                //     highlight(paraIndex, index, allParagraphs);
+                //     console.log(`Answer: ${context.slice(index[0], index[1])}`);
+                //     return;
+                // })
+                scrolling(firstParaIndex, allParagraphs);
+
             }).catch(function (error) {
                 console.log(error);
             })
 
-            // download json file of data
-            // download(jsonData, "data.json", "application/json");
         }
     }
 );
@@ -150,4 +159,60 @@ function download(content, fileName, contentType) {
     a.href = URL.createObjectURL(file);
     a.download = fileName;
     a.click();
+}
+
+// -----------------------------------------------------------------------------------------------    
+// Scroll up/down to the answer
+// chrome.runtime.onMessage.addListener(
+//     function(request, sender, sendResponse) {
+//         var target;
+//         switch (host) {
+//             case 'www.theguardian.com':
+//                 target = 'body h1, main>div>div>p'
+//                 break;
+//             case 'www.bbc.com':
+//                 target = 'article h1, div>p';
+//                 break;
+            
+//             default:
+//                 target = 'body div p'
+//                 break;
+//         }
+//         var allParagraphs = document.querySelectorAll(target);
+
+//         if(request.txt === "down") {
+//             if(index1) {
+//                 scrolling(index2, allParagraphs)
+//             } else if (index2) {
+//                 scrolling(index3, allParagraphs)
+//             }
+//         } else if (request.txt === "up") {
+//             if(index3) {
+//                 scrolling(index2, allParagraphs)
+//             } else if (index2) {
+//                 scrolling(index1, allParagraphs)
+//             }
+//         } else {
+//             scrolling(-1, allParagraphs)
+//         }
+//     }
+// )
+
+// -----------------------------------------------------------------------------------------------    
+// Function to highlight the answer in the paragraph
+function highlight(paraIndex, answerIndexes, allParagraphs, paragraphStartIndexes) {
+    let answerStartIndex = answerIndexes[0] - paragraphStartIndexes[paraIndex] + 8;
+    let answerEndIndex = answerIndexes[1] - paragraphStartIndexes[paraIndex] + 8;
+    innerHTML = allParagraphs[paraIndex].innerHTML;
+    let color = "#ffcc00";
+    console.log(innerHTML);
+    console.log("Text:", innerHTML.substring(answerStartIndex, answerEndIndex + 1));
+    innerHTML = innerHTML.substring(0,answerStartIndex) + "<span style='background-color: " + color + ";'>" + innerHTML.substring(answerStartIndex, answerEndIndex + 1) + "</span>" + innerHTML.substring(answerEndIndex + 1);
+    allParagraphs[paraIndex].innerHTML = innerHTML;
+}
+
+// -----------------------------------------------------------------------------------------------    
+// Function to smooth scroll
+function scrolling(paraIndex, allParagraphs) {
+    allParagraphs[paraIndex].scrollIntoView({behavior: 'smooth', block:'center'})
 }
