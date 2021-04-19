@@ -130,7 +130,7 @@ chrome.runtime.onMessage.addListener(
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
         if(request.txt === "down") {
-            // unhighlight current answer and move down to the other answer
+            // un-highlight current answer and move down to the other answer
             if(paragraphIndex1) {
                 unHighlight(paragraphIndex1)
                 highlight(paragraphIndex2)
@@ -142,7 +142,7 @@ chrome.runtime.onMessage.addListener(
                 scrolling(paragraphIndex3)
             }
         } else if (request.txt === "up") {
-            // unhighlight current answer and move up to the other answer
+            // un-highlight current answer and move up to the other answer
             if(paragraphIndex3) {
                 unHighlight(paragraphIndex3)
                 highlight(paragraphIndex2)
@@ -201,7 +201,7 @@ function highlight(paraIndex, answerIndexes) {
     innerText = allParagraphs[paraIndex].innerText
     var color = "#ff0000";
 
-    var highlightedAnswer = "<span style='background-color: " + color + ";'>" + innerText.substring(answerIndexes[0],answerIndexes[1]) + "</span>"
+    var highlightedAnswer = "<span id='highlighted-answer' style='cursor: pointer; background-color: " + color + ";'>" + innerText.substring(answerIndexes[0],answerIndexes[1]) + "</span>"
     innerText = innerText.substring(0,answerIndexes[0]) + highlightedAnswer + innerText.substring(answerIndexes[1]);
     allParagraphs[paraIndex].innerHTML = innerText;
 
