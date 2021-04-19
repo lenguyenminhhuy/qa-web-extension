@@ -96,24 +96,30 @@ chrome.runtime.onMessage.addListener(
             .then(function (response) {
                 //console.log(response.data);
                 console.log(paragraphStartIndexes);
-                let index = getParagraphIndex(response.data.index_0, paragraphStartIndexes);
-                console.log(`Paragraph index: ${index}`);
                 console.log(`Answer: ${context.slice(response.data.index_0[0], response.data.index_0[1])}`);
                 console.log(`Answer: ${context.slice(response.data.index_1[0], response.data.index_1[1])}`);
                 console.log(`Answer: ${context.slice(response.data.index_2[0], response.data.index_2[1])}`);
+                
+                //number 3 returned answers
+                let answerIndexes1 = response.data.index_0
+                let answerIndexes2 = response.data.index_1
+                let answerIndexes3 = response.data.index_2
+                
+                //number 3 paragraphs of 3 returned answers
+                let paragraphIndex1 = getParagraphIndex(answerIndexes1, paragraphStartIndexes);
+                console.log(`1st paragraph index: ${paragraphIndex1}`);
+                let paragraphIndex2 = getParagraphIndex(answerIndexes2, paragraphStartIndexes);
+                console.log(`2nd paragraph-2 index: ${paragraphIndex2}`);
+                let paragraphIndex3 = getParagraphIndex(answerIndexes3, paragraphStartIndexes);
+                console.log(`3rd paragraph-3 index: ${paragraphIndex3}`);
+
             }).catch(function (error) {
                 console.log(error);
             })
 
-            // download json file of data
-            // download(jsonData, "data.json", "application/json");
-
-            // highlight answers and scroll to the first one 
-            highlight(index1, response.data.index_0, response.data.index_0)
-            highlight(index2, response.data.index_1, response.data.index_1)
-            highlight(index3, response.data.index_2, response.data.index_2)
-
-            scrolling(index1)
+            // highlight and scroll to the first answer
+            highlight(paragraphIndex1, answerIndexes1)
+            scrolling(paragraphIndex1)
 
         }
     }
@@ -124,17 +130,29 @@ chrome.runtime.onMessage.addListener(
 chrome.runtime.onMessage.addListener(
     function(request, sender, sendResponse) {
         if(request.txt === "down") {
-            if(index1) {
-                scrolling(index2)
-            } else if (index2) {
-                scrolling(index3)
+            // unhighlight current answer and move down to the other answer
+            if(paragraphIndex1) {
+                unHighlight(paragraphIndex1)
+                highlight(paragraphIndex2)
+                scrolling(paragraphIndex2)
+            } 
+            else if (paragraphIndex2) {
+                unHighlight(paragraphIndex2)
+                highlight(paragraphIndex3)
+                scrolling(paragraphIndex3)
             }
         } else if (request.txt === "up") {
-            if(index3) {
-                scrolling(index2)
-            } else if (index2) {
-                scrolling(index1)
-            }
+            // unhighlight current answer and move up to the other answer
+            if(paragraphIndex3) {
+                unHighlight(paragraphIndex3)
+                highlight(paragraphIndex2)
+                scrolling(paragraphIndex2)
+            } 
+            else if (paragraphIndex2) {
+                unHighlight(paragraphIndex2)
+                highlight(paragraphIndex1)
+                scrolling(paragraphIndex1)
+            } 
         } else {
             scrolling(-1)
         }
@@ -145,7 +163,7 @@ chrome.runtime.onMessage.addListener(
 // Function to get index of the paragraph
 function getParagraphIndex(answerIndexes, paragraphStartIndexes) {
     let answerStartIndex = answerIndexes[0]; // get the start index from the answerIndexes
-    let paragraphIndex = binarySearch(answerStartIndex, paragraphStartIndexes); // get the pargra
+    let paragraphIndex = binarySearch(answerStartIndex, paragraphStartIndexes); // get the paragraph index
     for (let i = paragraphIndex + 1; i < paragraphStartIndexes.length; i++) {
         if (paragraphStartIndexes[i] == answerStartIndex) {
             paragraphIndex = i;
@@ -179,13 +197,42 @@ function binarySearch(value, indexArr) {
 
 // -----------------------------------------------------------------------------------------------    
 // Function to highlight the answer in the paragraph
-function highlight(paraIndex, responseStartIdx, responseEndIdx) {
-    innerHTML = allParagraphs[paraIndex].innerHTML
+function highlight(paraIndex, answerIndexes) {
+    innerText = allParagraphs[paraIndex].innerText
     var color = "#ff0000";
-    innerHTML = innerHTML.substring(0,responseStartIdx) + "<span style='background-color: " + color + ";'>" + innerHTML.substring(responseStartIdx,responseEndIdx) + "</span>" + innerHTML.substring(responseEndIdx);
-    allParagraphs[paraIndex].innerHTML = innerHTML;
+
+    var highlightedAnswer = "<span style='background-color: " + color + ";'>" + innerText.substring(answerIndexes[0],answerIndexes[1]) + "</span>"
+    innerText = innerText.substring(0,answerIndexes[0]) + highlightedAnswer + innerText.substring(answerIndexes[1]);
+    allParagraphs[paraIndex].innerHTML = innerText;
+
+
+// --------count tags----------
+    // innerHTML = allParagraphs[paraIndex].innerHTML
+    // var color = "#FFDB1F";
+    
+    // var tagStart = 0
+    // var tagEnd = 0
+    // for (let i = 0; i <span innerHTML.length; i++) {
+    //     if (innerHTML[i] === "<") {
+    //             tagStart = i;
+    //         } else if (innerHTML[i] === ">") {
+    //                 tagEnd = i
+    //             }
+    //         }
+    // var tagLength = tagEnd - tagStart + 1
+    
+    // var highlightedAnswer = "<span style='background-color: " + color + ";'>" + innerHTML.substring(answerIndexes[0],answerIndexes[1]) + "</span>"
+    // // innerHTML = innerHTML.substring(0,responseStartIdx) + "<span style='background-color: " + color + ";'>" + innerHTML.substring(responseStartIdx,responseEndIdx) + "</span>" + innerHTML.substring(responseEndIdx);
+    // innerHTML = innerHTML.substring(0,answerIndexes[0]) + highlightedAnswer + innerHTML.substring(answerIndexes[1]);
+    // allParagraphs[paraIndex].innerHTML = innerHTML;
 }
 
+// -----------------------------------------------------------------------------------------------    
+// Function to un-highlight the answer in the paragraph
+function unHighlight(paraIndex) {
+    return allParagraphs[paraIndex].innerHTML
+}
+                
 // -----------------------------------------------------------------------------------------------    
 // Function to smooth scroll
 function scrolling(paraIndex) {
