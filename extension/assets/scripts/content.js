@@ -82,7 +82,7 @@ chrome.runtime.onMessage.addListener(
             data = {"question": question, "context": context};
             let config = {
                 method: 'post',
-                url: 'https://0.0.0.0:5000/predictions/my_tc',
+                url: 'https://localhost:5000/predictions/my_tc',
                 headers: { 
                     'Content-Type': 'application/json'
                 },
@@ -109,9 +109,9 @@ chrome.runtime.onMessage.addListener(
                 let paragraphIndex1 = getParagraphIndex(answerIndexes1, paragraphStartIndexes);
                 console.log(`1st paragraph index: ${paragraphIndex1}`);
                 let paragraphIndex2 = getParagraphIndex(answerIndexes2, paragraphStartIndexes);
-                console.log(`2nd paragraph-2 index: ${paragraphIndex2}`);
+                console.log(`2nd paragraph index: ${paragraphIndex2}`);
                 let paragraphIndex3 = getParagraphIndex(answerIndexes3, paragraphStartIndexes);
-                console.log(`3rd paragraph-3 index: ${paragraphIndex3}`);
+                console.log(`3rd paragraph index: ${paragraphIndex3}`);
 
             }).catch(function (error) {
                 console.log(error);
