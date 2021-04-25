@@ -129,45 +129,36 @@ chrome.runtime.onMessage.addListener(
                 // Scroll to the next answer
                 var current = 1;
                 chrome.runtime.onMessage.addListener(
-                    function(request, sender, sendResponse) {
-                        switch (current) {
-                            case 1:
-                                if(request.txt === "down") {
-                                    moveNextAnswer(firstParaInnerHTML, firstParaIndex, secondParaIndex, secondAnswerIndexes, allParagraphs, paragraphStartIndexes)
-                                    current = 2
-                                    break;
-                                }
-                                if(request.txt === "up") {
-                                    moveNextAnswer(firstParaInnerHTML, firstParaIndex, thirdParaIndex, thirdAnswerIndexes, allParagraphs, paragraphStartIndexes)
-                                    current = 3
-                                    break;
-                                }
-                            case 2:
-                                if(request.txt === "down") {
-                                    moveNextAnswer(secondParaInnerHTML, secondParaIndex, thirdParaIndex, thirdAnswerIndexes, allParagraphs, paragraphStartIndexes)
-                                    current = 3
-                                    break;
-                                }
-                                if(request.txt === "up") {
-                                    moveNextAnswer(secondParaInnerHTML, secondParaIndex, firstParaIndex, firstAnswerIndexes, allParagraphs, paragraphStartIndexes)
-                                    current = 1
-                                    break;
-                                }
-                            case 3:
-                                if(request.txt === "down") {
-                                    moveNextAnswer(thirdParaInnerHTML, thirdParaIndex, firstParaIndex, firstAnswerIndexes, allParagraphs, paragraphStartIndexes)
-                                    current = 1
-                                    break;
-                                }
-                                if(request.txt === "up") {
-                                    moveNextAnswer(thirdParaInnerHTML, thirdParaIndex, secondParaIndex, secondAnswerIndexes, allParagraphs, paragraphStartIndexes)
-                                    current = 2
-                                    break;
-                                }
-                            default:
-                                break;
-                        }
-                    }
+                    moveUDNextAnswer(request, current)
+                    // function(request, sender, sendResponse) {
+                    //     switch (current) {
+                    //         case 1:
+                    //             if(request.txt === "down") {
+                    //                 moveNextAnswer(firstParaInnerHTML, firstParaIndex, secondParaIndex, secondAnswerIndexes, allParagraphs, paragraphStartIndexes)
+                    //                 current = 2
+                    //                 break;
+                    //             }
+                    //         case 2:
+                    //             if(request.txt === "down") {
+                    //                 moveNextAnswer(secondParaInnerHTML, secondParaIndex, thirdParaIndex, thirdAnswerIndexes, allParagraphs, paragraphStartIndexes)
+                    //                 current = 3
+                    //                 break;
+                    //             }
+                    //             if(request.txt === "up") {
+                    //                 moveNextAnswer(secondParaInnerHTML, secondParaIndex, firstParaIndex, firstAnswerIndexes, allParagraphs, paragraphStartIndexes)
+                    //                 current = 1
+                    //                 break;
+                    //             }
+                    //         case 3:
+                    //             if(request.txt === "up") {
+                    //                 moveNextAnswer(thirdParaInnerHTML, thirdParaIndex, secondParaIndex, secondAnswerIndexes, allParagraphs, paragraphStartIndexes)
+                    //                 current = 2
+                    //                 break;
+                    //             }
+                    //         default:
+                    //             break;
+                    //     }
+                    // }
                 )
             }).catch(function (error) {
                 console.log(error);
@@ -251,4 +242,34 @@ function moveNextAnswer(innerHTML, curParaIndex, nextParaIndex, answerIndexes, a
     removeHighlight(innerHTML, curParaIndex, allParagraphs);
     highlight(answerIndexes, nextParaIndex, allParagraphs, paragraphStartIndexes);
     scrolling(nextParaIndex, allParagraphs);
+}
+
+function moveUDNextAnswer(request, current) {
+    switch (current) {
+        case 1:
+            if(request.txt === "down") {
+                moveNextAnswer(firstParaInnerHTML, firstParaIndex, secondParaIndex, secondAnswerIndexes, allParagraphs, paragraphStartIndexes)
+                current = 2
+                break;
+            }
+        case 2:
+            if(request.txt === "down") {
+                moveNextAnswer(secondParaInnerHTML, secondParaIndex, thirdParaIndex, thirdAnswerIndexes, allParagraphs, paragraphStartIndexes)
+                current = 3
+                break;
+            }
+            if(request.txt === "up") {
+                moveNextAnswer(secondParaInnerHTML, secondParaIndex, firstParaIndex, firstAnswerIndexes, allParagraphs, paragraphStartIndexes)
+                current = 1
+                break;
+            }
+        case 3:
+            if(request.txt === "up") {
+                moveNextAnswer(thirdParaInnerHTML, thirdParaIndex, secondParaIndex, secondAnswerIndexes, allParagraphs, paragraphStartIndexes)
+                current = 2
+                break;
+            }
+        default:
+            break;
+    }
 }

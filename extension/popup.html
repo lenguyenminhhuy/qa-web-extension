@@ -15,12 +15,14 @@
             rel="stylesheet"
             href="./assets/fonts/themify-icons/themify-icons.css"
         />
+        <link rel="stylesheet" href="/rate/style.css" />
+        <script src="/assets/fonts/fontawesome/570afb9570.js"></script>
     </head>
     <script src="./assets/scripts/popup.js"></script>
     <body>
         <div id="main">
             <div id="header">
-                <h1 class="logo-name" onclick="myClick()">
+                <h1 class="logo-name">
                     Machine Reading
                     <span class="version">(0.0.1)</span>
                 </h1>
@@ -28,6 +30,7 @@
             <div class="form-group">
                 <label for="searching"></label>
                 <input
+                    autofocus
                     id="search-bar"
                     placeholder="What would you like to know about on this page?"
                     type="text"
@@ -42,7 +45,130 @@
                 <div class="status"></div>
                 <div class="progress-bar"></div>
             </div>
+            <div class="rating">
+                <div class="answer-container">
+                    <div class="answer">
+                        <p class="answer-header">1st answer:</p>
+                        <p id="firstReturnedAnswer" class="answer-main"></p>
+                    </div>
+                    <div class="rate-container">
+                        <div class="stars" id="stars1">
+                            <input type="radio" name="rate1" id="rate-1-5" />
+                            <label
+                                name="rate1"
+                                for="rate-1-5"
+                                class="fas fa-star"
+                            ></label>
+                            <input type="radio" name="rate1" id="rate-1-4" />
+                            <label
+                                name="rate1"
+                                for="rate-1-4"
+                                class="fas fa-star"
+                            ></label>
+                            <input type="radio" name="rate1" id="rate-1-3" />
+                            <label
+                                name="rate1"
+                                for="rate-1-3"
+                                class="fas fa-star"
+                            ></label>
+                            <input type="radio" name="rate1" id="rate-1-2" />
+                            <label
+                                name="rate1"
+                                for="rate-1-2"
+                                class="fas fa-star"
+                            ></label>
+                            <input type="radio" name="rate1" id="rate-1-1" />
+                            <label
+                                name="rate1"
+                                for="rate-1-1"
+                                class="fas fa-star"
+                            ></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="answer-container">
+                    <div class="answer">
+                        <p class="answer-header">2nd answer:</p>
+                        <p id="secondReturnedAnswer" class="answer-main"></p>
+                    </div>
+                    <div class="rate-container">
+                        <div class="stars" id="stars2">
+                            <input type="radio" name="rate2" id="rate-2-5" />
+                            <label
+                                name="rate2"
+                                for="rate-2-5"
+                                class="fas fa-star"
+                            ></label>
+                            <input type="radio" name="rate2" id="rate-2-4" />
+                            <label
+                                name="rate2"
+                                for="rate-2-4"
+                                class="fas fa-star"
+                            ></label>
+                            <input type="radio" name="rate2" id="rate-2-3" />
+                            <label
+                                name="rate2"
+                                for="rate-2-3"
+                                class="fas fa-star"
+                            ></label>
+                            <input type="radio" name="rate2" id="rate-2-2" />
+                            <label
+                                name="rate2"
+                                for="rate-2-2"
+                                class="fas fa-star"
+                            ></label>
+                            <input type="radio" name="rate2" id="rate-2-1" />
+                            <label
+                                name="rate2"
+                                for="rate-2-1"
+                                class="fas fa-star"
+                            ></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="answer-container">
+                    <div class="answer">
+                        <p class="answer-header">3rd answer:</p>
+                        <p id="thirdReturnedAnswer" class="answer-main"></p>
+                    </div>
+                    <div class="rate-container">
+                        <div class="stars" id="stars3">
+                            <input type="radio" name="rate3" id="rate-3-5" />
+                            <label
+                                name="rate3"
+                                for="rate-3-5"
+                                class="fas fa-star"
+                            ></label>
+                            <input type="radio" name="rate3" id="rate-3-4" />
+                            <label
+                                name="rate3"
+                                for="rate-3-4"
+                                class="fas fa-star"
+                            ></label>
+                            <input type="radio" name="rate3" id="rate-3-3" />
+                            <label
+                                name="rate3"
+                                for="rate-3-3"
+                                class="fas fa-star"
+                            ></label>
+                            <input type="radio" name="rate3" id="rate-3-2" />
+                            <label
+                                name="rate3"
+                                for="rate-3-2"
+                                class="fas fa-star"
+                            ></label>
+                            <input type="radio" name="rate3" id="rate-3-1" />
+                            <label
+                                name="rate3"
+                                for="rate-3-1"
+                                class="fas fa-star"
+                            ></label>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         <!-- <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script> -->
     </body>
+    <footer></footer>
 </html>

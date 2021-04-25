@@ -3,23 +3,24 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+    background-color: #e6e6e6;
 }
 
 html,
 body {
     /* font-family: "Open Sans", helvetica; */
-    font-family: "Open Sans", cursive;
+    font-family: "Poppins", sans-serif;
     font-size: 14px;
     min-height: 130px;
     width: 500px;
 }
 
-#main {
-    padding: 2px;
-    box-sizing: border-box;
+footer {
+    padding: 10px;
 }
 
 #header {
+    font-family: "Open Sans", cursive;
     height: 70px;
     width: 100%;
     padding: 19px 0px;
@@ -36,6 +37,11 @@ body {
 .version {
     font-size: 16px;
     color: #444;
+}
+
+#main {
+    padding: 2px;
+    box-sizing: border-box;
 }
 
 .form-group {
@@ -73,5 +79,5 @@ body {
 }
 
 #progress {
-    padding: 15px;
+    min-width: 0;
 }
