@@ -229,13 +229,13 @@ class Trainer():
                         for k, v in curr_score.items():
                             tbx.add_scalar(f'val/{k}', v, global_idx)
                         self.log.info(f'Eval {results_str}')
-                        if self.visualize_predictions:
-                            util.visualize(tbx,
-                                           pred_dict=preds,
-                                           gold_dict=val_dict,
-                                           step=global_idx,
-                                           split='val',
-                                           num_visuals=self.num_visuals)
+                        # if self.visualize_predictions:
+                        util.visualize(tbx,
+                                        pred_dict=preds,
+                                        gold_dict=val_dict,
+                                        step=global_idx,
+                                        split='val',
+                                        num_visuals=self.num_visuals)
                         if curr_score['F1'] >= best_scores['F1']:
                             best_scores = curr_score
                             self.save(model)
@@ -262,8 +262,8 @@ def main():
     args = get_train_test_args()
 
     util.set_seed(args.seed)
-    model = DistilBertForQuestionAnswering.from_pretrained("distilbert-base-uncased")
-    tokenizer = DistilBertTokenizerFast.from_pretrained('distilbert-base-uncased')
+    model = DistilBertForQuestionAnswering.from_pretrained("minhdang241/TAPT_distillBERT")
+    tokenizer = DistilBertTokenizerFast.from_pretrained('minhdang241/TAPT_distillBERT')
     with wandb.init(project="qa-system", config=args) as run:
         run.name = args.run_name
         wandb.watch(model)
