@@ -291,7 +291,6 @@ def main():
             )
             model_artifact.add_dir(os.path.join(args.save_dir, 'checkpoint'))
             run.log_artifact(model_artifact)
-            # wandb.save(os.path.join(args.save_dir, 'checkpoint'))
 
         if args.do_eval:
             args.device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
