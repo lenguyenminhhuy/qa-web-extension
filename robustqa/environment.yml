@@ -1,4 +1,4 @@
-name: robustqa 
+name: robustqa-test 
 channels:
   - pytorch
   - defaults
@@ -8,7 +8,6 @@ dependencies:
   - pytorch=1.7.1
   - numpy
   - tqdm
-  - wandb
   - pip:
     - torch==1.7.1
     - tqdm==4.49.0
@@ -16,4 +15,5 @@ dependencies:
     - tensorboard
     - tensorflow
     - tensorboardX
+    - wandb
 
