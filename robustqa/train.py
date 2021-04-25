@@ -242,6 +242,7 @@ class Trainer():
                         # Log to wandb    
                         wandb.log({"loss": loss}, step=global_idx)
                         wandb.log({"F1": curr_score["F1"]}, step=global_idx)
+                        wandb.log({"EM": curr_score["EM"]}, step=global_idx)
                     global_idx += 1
         return best_scores
 
@@ -263,8 +264,8 @@ def main():
     util.set_seed(args.seed)
     model = DistilBertForQuestionAnswering.from_pretrained("distilbert-base-uncased")
     tokenizer = DistilBertTokenizerFast.from_pretrained('distilbert-base-uncased')
-    with wandb.init(project="qa-system", config=args):
-        wandb.run.name = args.run_name
+    with wandb.init(project="qa-system", config=args) as run:
+        run.name = args.run_name
         wandb.watch(model)
         if args.do_train:
             if not os.path.exists(args.save_dir):
@@ -285,7 +286,13 @@ def main():
                                     batch_size=args.batch_size,
                                     sampler=SequentialSampler(val_dataset))
             best_scores = trainer.train(model, train_loader, val_loader, val_dict)
-            wandb.save(os.path.join(args.save_dir, 'checkpoint'))
+            model_artifact = wandb.Artifact(
+                args.run_name, type="model",
+            )
+            model_artifact.add_dir(os.path.join(args.save_dir, 'checkpoint'))
+            run.log_artifact(model_artifact)
+            # wandb.save(os.path.join(args.save_dir, 'checkpoint'))
+
         if args.do_eval:
             args.device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
             split_name = 'test' if 'test' in args.eval_dir else 'validation'
