@@ -267,10 +267,10 @@ def main():
     with wandb.init(project="qa-system", config=args) as run:
         run.name = args.run_name
         wandb.watch(model)
+        if not os.path.exists(args.save_dir):
+            os.makedirs(args.save_dir)
+        args.save_dir = util.get_save_dir(args.save_dir, args.run_name)
         if args.do_train:
-            if not os.path.exists(args.save_dir):
-                os.makedirs(args.save_dir)
-            args.save_dir = util.get_save_dir(args.save_dir, args.run_name)
             log = util.get_logger(args.save_dir, 'log_train')
             log.info(f'Args: {json.dumps(vars(args), indent=4, sort_keys=True)}')
             log.info("Preparing Training Data...")
