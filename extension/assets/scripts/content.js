@@ -28,13 +28,35 @@ switch (host) {
 }
 
 var allParagraphs = document.querySelectorAll(target);
+const allParaInnerHTML = allParagraphs.innerHTML
+var bodyPage = document.querySelector('body')
+
+// chrome.runtime.onMessage.addListener(
+//     function(request, sender, sendResponse) {
+//         if(request.txt === "new session" ) {
+//             console.log(1);
+//             document.querySelectorAll(target).innerHTML = allParaInnerHTML;
+//             console.log(document.querySelectorAll(target).innerHTML);
+//             console.log(2);
+//             scrollToTop(bodyPage);
+//         }
+//     }
+// );
 
 chrome.runtime.onMessage.addListener(
       function(request, sender, sendResponse) {
-        if(request.txt === "hello" ) {
+        if(request.question === "") {
+            console.log("question null");
+        } else if(request.txt === "question here" && request.question !== "" ) {
             if(!trustedURLs.includes(host)) {
-                alert("MRC system has not been optimized for this webpage.\nThe result can be incorrect or null.")
+                alert("MRC system has not been optimized for this webpage.\nThe result can be incorrect.")
             }
+            console.log(1);
+            document.querySelectorAll(target).innerHTML = allParaInnerHTML;
+            console.log(document.querySelectorAll(target).innerHTML);
+            console.log(2);
+            // scrollToTop(bodyPage);
+
             var data = {};
 
             // save text type paragraphs to data
@@ -95,10 +117,17 @@ chrome.runtime.onMessage.addListener(
             axios(config)
             .then(function (response) {
                 //console.log(response.data);
+                let firstAnswer = context.slice(response.data.index_0[0], response.data.index_0[1]);
+                let secondAnswer = context.slice(response.data.index_1[0], response.data.index_1[1]);
+                let thirdAnswer = context.slice(response.data.index_2[0], response.data.index_2[1]);
+                console.log(firstAnswer);
+                console.log(secondAnswer);
+                console.log(thirdAnswer);
+
                 console.log(paragraphStartIndexes);
-                console.log(`Answer: ${context.slice(response.data.index_0[0], response.data.index_0[1])}`);
-                console.log(`Answer: ${context.slice(response.data.index_1[0], response.data.index_1[1])}`);
-                console.log(`Answer: ${context.slice(response.data.index_2[0], response.data.index_2[1])}`);
+                // console.log(`Answer: ${context.slice(response.data.index_0[0], response.data.index_0[1])}`);
+                // console.log(`Answer: ${context.slice(response.data.index_1[0], response.data.index_1[1])}`);
+                // console.log(`Answer: ${context.slice(response.data.index_2[0], response.data.index_2[1])}`);
                 
                 //3 returned answers' indexes
                 let firstAnswerIndexes = response.data.index_0
@@ -125,6 +154,19 @@ chrome.runtime.onMessage.addListener(
                 // highlight and scroll to the first answer
                 highlight(firstAnswerIndexes, firstParaIndex, allParagraphs, paragraphStartIndexes)
                 scrolling(firstParaIndex, allParagraphs)
+
+                let answerList = {
+                    firstAnswer: firstAnswer,
+                    secondAnswer: secondAnswer,
+                    thirdAnswer: thirdAnswer
+                }
+
+                chrome.runtime.sendMessage({
+                    data: "Hello popup, how are you",
+                    answerList
+                }, function (response) {
+                    console.dir(response);
+                });
 
                 // Scroll to the next answer
                 var current = 1;
@@ -168,6 +210,9 @@ chrome.runtime.onMessage.addListener(
         }
     }
 );
+//         }
+//     }
+// );
 
 
 // ***FUNCTION***
@@ -210,10 +255,12 @@ function binarySearch(value, indexArr) {
 // -----------------------------------------------------------------------------------------------    
 // Function highlight the answer in the paragraph
 function highlight(answerIndexes, paraIndex, allParagraphs, paragraphStartIndexes) {
-    console.log("Highlighting...");
+    // console.log("Highlighting...");
     let answerStartIndex = answerIndexes[0] - paragraphStartIndexes[paraIndex];
     let answerEndIndex = answerIndexes[1] - paragraphStartIndexes[paraIndex];
-    innerText = allParagraphs[paraIndex].innerText;
+    oldInnerText = allParagraphs[paraIndex].innerText;
+    const regex = /\s\s+/g
+    innerText = oldInnerText.replace(regex, "")
     let color = "#FFA61F";
     var highlightedAnswer = "<span id='highlighted-answer' style='cursor: pointer; background-color: " + color + ";'>" + innerText.substring(answerStartIndex,answerEndIndex) + "</span>"
     innerText = innerText.substring(0,answerStartIndex) + highlightedAnswer + innerText.substring(answerEndIndex);
@@ -224,15 +271,15 @@ function highlight(answerIndexes, paraIndex, allParagraphs, paragraphStartIndexe
 // -----------------------------------------------------------------------------------------------    
 // Function remove highlight the answer in the paragraph
 function removeHighlight(innerHTML, curParaIndex, allParagraphs) {
-    console.log("");
-    console.log("Highlight removing...");
+    // console.log("");
+    // console.log("Highlight removing...");
     allParagraphs[curParaIndex].innerHTML = innerHTML;
 }
 
 // -----------------------------------------------------------------------------------------------    
 // Function smooth scroll
 function scrolling(nextParaIndex, allParagraphs) {
-    console.log("Scrolling...");
+    console.log("Scrolling to paragraph" + nextParaIndex);
     allParagraphs[nextParaIndex].scrollIntoView({behavior: 'smooth', block:'center'});
 }
 
@@ -243,6 +290,7 @@ function moveNextAnswer(innerHTML, curParaIndex, nextParaIndex, answerIndexes, a
     highlight(answerIndexes, nextParaIndex, allParagraphs, paragraphStartIndexes);
     scrolling(nextParaIndex, allParagraphs);
 }
+// -----------------------------------------------------------------------------------------------    
 
 function moveUDNextAnswer(request, current) {
     switch (current) {
@@ -273,3 +321,8 @@ function moveUDNextAnswer(request, current) {
             break;
     }
 }
+// -----------------------------------------------------------------------------------------------    
+
+// function scrollToTop(element) {
+//   element.scrollIntoView({behavior: "smooth", block: "top"});
+// }

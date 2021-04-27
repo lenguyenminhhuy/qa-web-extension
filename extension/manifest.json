@@ -3,31 +3,23 @@
     "name": "Machine Reading",
     "description": "blah blah ........",
     "version": "1.0",
-    "content_scripts": 
-    [
+    "content_scripts": [
         {
-        "matches": ["<all_urls>"],
-        "js": [
-            "./assets/scripts/axios.js",
-            "./assets/scripts/content.js"
-        ],
-        "run_at": "document_end"
+            "matches": ["<all_urls>"],
+            "js": ["./assets/scripts/axios.js", "./assets/scripts/content.js"],
+            "run_at": "document_end"
         }
     ],
 
-    "permissions": [
-        "tabs",
-        "background"  
-    ],
+    "permissions": ["tabs", "background"],
 
-    "icons": {
-    },
+    "icons": {},
 
     "background": {
         "scripts": []
     },
 
-    "browser_action": {       
+    "browser_action": {
         "default_icon": "./assets/images/icon.png",
         "default_title": "Read for me",
         "default_popup": "popup.html"

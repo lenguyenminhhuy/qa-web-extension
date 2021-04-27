@@ -7,21 +7,39 @@ document.addEventListener("DOMContentLoaded", function() {
 //------------------------------Use enter----------------------------------------
 // Get the input field
     var search = document.getElementById("search-bar");
+    var rating = document.getElementById("rating")
+    // search.addEventListener("oninput", function(event) {
+    //     reload();
+    // });
     // Execute a function when the user releases a key on the keyboard
     search.addEventListener("keyup", function(event) {
-    // Number 13 is the "Enter" key on the keyboard
+        // Number 13 is the "Enter" key on the keyboard
         if (event.keyCode === 13) {
             // Cancel the default action, if needed
             event.preventDefault();
             // Trigger the button element with a click
-            popup();
+            sendQuestion();
         }
+        chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+            console.log("ok");
+            rating.style.display = "block";
+            var firstReturnedAnswer = document.getElementById("firstReturnedAnswer");
+            var secondReturnedAnswer = document.getElementById("secondReturnedAnswer");
+            var thirdReturnedAnswer = document.getElementById("thirdReturnedAnswer");
+            firstReturnedAnswer.innerText = message.answerList.firstAnswer
+            secondReturnedAnswer.innerText = message.answerList.secondAnswer
+            thirdReturnedAnswer.innerText = message.answerList.thirdAnswer
+            sendResponse({
+                data: "I am fine, thank you. How is life in the background?"
+            }); 
+        });
+
         document.getElementById("down").addEventListener("click", scrollDown);
         document.getElementById("up").addEventListener("click", scrollUp);
     });
 });
 //-------------------------------------------------------------------------------
-function popup() {
+function sendQuestion() {
     var question = document.getElementById("search-bar").value;
     console.log(question);
     // determine the target tab
@@ -29,13 +47,27 @@ function popup() {
         var activeTab = tabs[0];
         console.log(tabs[0]);
             let msg = {
-                txt: "hello",
+                txt: "question here",
                 question: question
             }
         // send message
         chrome.tabs.sendMessage(tabs[0].id, msg)
     });
 }
+
+// function reload() {
+//     // var checkInput = document.getElementById("search-bar");
+//     // console.log(checkInput);
+//     chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
+//         var activeTab = tabs[0];
+//         console.log(tabs[0]);
+//             let msg = {
+//                 txt: "new session",
+//             }
+//         // send message
+//         chrome.tabs.sendMessage(tabs[0].id, msg)
+//     });
+// }
 
 function scrollDown() {
     chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
@@ -60,3 +92,7 @@ function scrollUp() {
         chrome.tabs.sendMessage(tabs[0].id, msg)
     });
 }
+
+// function showDiv(element) {
+//    document.getElementById(element).style.display = "block";
+// }
