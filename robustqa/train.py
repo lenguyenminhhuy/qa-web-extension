@@ -186,6 +186,8 @@ class Trainer():
             results = util.eval_dicts(data_dict, preds)
             results_list = [('F1', results['F1']),
                             ('EM', results['EM'])]
+            wandb.log({"F1": results["F1"]})
+            wandb.log({"EM": results["EM"]})
         else:
             results_list = [('F1', -1.0),
                             ('EM', -1.0)]
@@ -263,14 +265,14 @@ def main():
 
     util.set_seed(args.seed)
     model = DistilBertForQuestionAnswering.from_pretrained("minhdang241/TAPT_distillBERT")
-    tokenizer = DistilBertTokenizerFast.from_pretrained('minhdang241/TAPT_distillBERT')
+    tokenizer = DistilBertTokenizerFast.from_pretrained("distilbert-base-uncased")
     with wandb.init(project="qa-system", config=args) as run:
         run.name = args.run_name
         wandb.watch(model)
-        if not os.path.exists(args.save_dir):
-            os.makedirs(args.save_dir)
-        args.save_dir = util.get_save_dir(args.save_dir, args.run_name)
         if args.do_train:
+            if not os.path.exists(args.save_dir):
+                os.makedirs(args.save_dir)
+            args.save_dir = util.get_save_dir(args.save_dir, args.run_name)
             log = util.get_logger(args.save_dir, 'log_train')
             log.info(f'Args: {json.dumps(vars(args), indent=4, sort_keys=True)}')
             log.info("Preparing Training Data...")
@@ -297,8 +299,11 @@ def main():
             split_name = 'test' if 'test' in args.eval_dir else 'validation'
             log = util.get_logger(args.save_dir, f'log_{split_name}')
             trainer = Trainer(args, log)
-            checkpoint_path = os.path.join(args.save_dir, 'checkpoint')
-            model = DistilBertForQuestionAnswering.from_pretrained(checkpoint_path)
+            if args.checkpoint_path != "":
+                model = DistilBertForQuestionAnswering.from_pretrained(args.checkpoint_path)
+            else:
+                checkpoint_path = os.path.join(args.save_dir, 'checkpoint')
+                model = DistilBertForQuestionAnswering.from_pretrained(checkpoint_path)
             model.to(args.device)
             eval_dataset, eval_dict = get_dataset(args, args.eval_datasets, args.eval_dir, tokenizer, split_name)
             eval_loader = DataLoader(eval_dataset,
