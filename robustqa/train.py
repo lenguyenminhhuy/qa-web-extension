@@ -264,8 +264,8 @@ def main():
     args = get_train_test_args()
 
     util.set_seed(args.seed)
-    model = DistilBertForQuestionAnswering.from_pretrained("minhdang241/TAPT_distillBERT")
-    tokenizer = DistilBertTokenizerFast.from_pretrained("distilbert-base-uncased")
+    model = DistilBertForQuestionAnswering.from_pretrained(args.model_checkpoint)
+    tokenizer = DistilBertTokenizerFast.from_pretrained(args.model_checkpoint)
     with wandb.init(project="qa-system", config=args) as run:
         run.name = args.run_name
         wandb.watch(model)

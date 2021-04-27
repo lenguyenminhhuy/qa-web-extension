@@ -23,5 +23,6 @@ def get_train_test_args():
     parser.add_argument('--visualize-predictions', action='store_true')
     parser.add_argument('--eval-every', type=int, default=5000)
     parser.add_argument('--checkpoint_path', type=str, default="")
+    parser.add_argument('--model_checkpoint', type=str, default="distilbert-base-uncased")
     args = parser.parse_args()
     return args
