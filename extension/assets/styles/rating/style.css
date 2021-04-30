@@ -17,7 +17,7 @@
     margin: 1px;
     border-radius: 6px;
     align-items: center;
-    opacity: 85%;
+    opacity: 87%;
 
     transition: opacity 0.2s ease;
 }
@@ -75,7 +75,7 @@
     align-items: center;
     justify-content: center;
     border-radius: 6px;
-    display: none;
+    /* display: none; */
 
     opacity: 90%;
 }

@@ -32,10 +32,21 @@ document.addEventListener("DOMContentLoaded", function() {
             sendResponse({
                 data: "I am fine, thank you. How is life in the background?"
             }); 
+            document.getElementById("firstReturnedAnswer").addEventListener("click", scrolling(1));
+            document.getElementById("secondReturnedAnswer").addEventListener("click", scrolling(2));
+            document.getElementById("thirdReturnedAnswer").addEventListener("click", scrolling(3));
         });
 
-        document.getElementById("down").addEventListener("click", scrollDown);
-        document.getElementById("up").addEventListener("click", scrollUp);
+        // document.getElementById("firstReturnedAnswer").addEventListener("click", scrolling(1));
+        // document.getElementById("secondReturnedAnswer").addEventListener("click", scrolling(2));
+        // document.getElementById("thirdReturnedAnswer").addEventListener("click", scrolling(3));
+
+        // firstReturnedAnswer.addEventListener("click", scrolling("1", document.getElementById("rate-container-1")));
+        // secondReturnedAnswer.addEventListener("click", scrolling("2", document.getElementById("rate-container-2")));
+        // thirdReturnedAnswer.addEventListener("click", scrolling("3", document.getElementById("rate-container-3")));
+
+        // document.getElementById("down").addEventListener("click", scrollDown);
+        // document.getElementById("up").addEventListener("click", scrollUp);
     });
 });
 //-------------------------------------------------------------------------------
@@ -68,6 +79,22 @@ function sendQuestion() {
 //         chrome.tabs.sendMessage(tabs[0].id, msg)
 //     });
 // }
+
+
+
+function scrolling(position) {
+    console.log(position);
+    // starContainer.style.display = "block"
+    chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
+        var activeTab = tabs[0];
+        console.log(tabs[0]);
+            let msg = {
+                txt: position,
+            }
+        // send message
+        chrome.tabs.sendMessage(tabs[0].id, msg)
+    });
+}
 
 function scrollDown() {
     chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
