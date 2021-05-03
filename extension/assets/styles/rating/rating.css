@@ -5,6 +5,7 @@
     display: flex;
     flex-direction: column;
     padding: 0 8px;
+    margin-top: 15px;
 }
 
 .result {
@@ -82,5 +83,5 @@ input[name="star-radio"]:checked ~ label[name="rate"] {
 }
 
 .result-container {
-    display: none;
+    /* display: none; */
 }

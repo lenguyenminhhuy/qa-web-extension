@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", function() {
 // Get the input field
     var search = document.getElementById("search-bar");
     var rating = document.getElementById("result-container")
+    var progressBar = document.getElementById("progress-bar")
     // search.addEventListener("oninput", function(event) {
     //     reload();
     // });
@@ -19,10 +20,12 @@ document.addEventListener("DOMContentLoaded", function() {
             event.preventDefault();
             // Trigger the button element with a click
             sendQuestion();
+            progressBar.style.display = "block";
         }
         chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
             if(message.greeting === "Hi popup, there are the answers") {
                 console.log("content -> popup " + message.greeting);
+                progressBar.style.display = "none";
                 rating.style.display = "block";
                 var firstReturnedAnswer = document.getElementById("firstReturnedAnswer");
                 var secondReturnedAnswer = document.getElementById("secondReturnedAnswer");
