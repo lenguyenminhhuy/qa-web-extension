@@ -26,22 +26,9 @@ switch (host) {
         target = 'body div p'
         break;
 }
+// var targetOrg = document.querySelectorAll(target);
+// var targetInnerHTML = targetOrg.innerHTML;
 
-var allParagraphs = document.querySelectorAll(target);
-const allParaInnerHTML = allParagraphs.innerHTML
-var bodyPage = document.querySelector('body')
-
-// chrome.runtime.onMessage.addListener(
-//     function(request, sender, sendResponse) {
-//         if(request.txt === "new session" ) {
-//             console.log(1);
-//             document.querySelectorAll(target).innerHTML = allParaInnerHTML;
-//             console.log(document.querySelectorAll(target).innerHTML);
-//             console.log(2);
-//             scrollToTop(bodyPage);
-//         }
-//     }
-// );
 
 chrome.runtime.onMessage.addListener(
     function (request, sender, sendResponse) {
@@ -51,11 +38,15 @@ chrome.runtime.onMessage.addListener(
             if (!trustedURLs.includes(host)) {
                 alert("MRC system has not been optimized for this webpage.\nThe result can be incorrect.")
             }
+            
+            // document.querySelectorAll(target).contentWindow.location.reload(true);
+
+            var allParagraphs = document.querySelectorAll(target);
+            const allParaInnerHTML = allParagraphs.innerHTML;
             console.log(1);
             document.querySelectorAll(target).innerHTML = allParaInnerHTML;
             console.log(document.querySelectorAll(target).innerHTML);
             console.log(2);
-            // scrollToTop(bodyPage);
 
             var data = {};
 
@@ -162,9 +153,6 @@ chrome.runtime.onMessage.addListener(
                     
                     chrome.runtime.sendMessage({
                         greeting: "Hi popup, there are the answers",
-                        firstAnswer: firstAnswer,
-                        secondAnswer: secondAnswer,
-                        thirdAnswer: thirdAnswer,
                         answerList: answerList
                     });
 
@@ -174,23 +162,26 @@ chrome.runtime.onMessage.addListener(
                                 var current = request.value;
                                 switch (current) {
                                     case "1":
-                                        moveNextAnswer(oldParaInnerHTML, oldParaIndex, firstParaIndex, firstAnswerIndexes, allParagraphs, paragraphStartIndexes)
-                                        // scrolling(firstParaIndex, allParagraphs);
-                                        oldParaIndex = firstParaIndex;
-                                        oldParaInnerHTML = firstParaInnerHTML;
-                                        break;
+                                        
+                                            moveNextAnswer(oldParaInnerHTML, oldParaIndex, firstParaIndex, firstAnswerIndexes, allParagraphs, paragraphStartIndexes)
+                                            oldParaIndex = firstParaIndex;
+                                            oldParaInnerHTML = firstParaInnerHTML;
+                                            break;
+                                        
                                     case "2":
-                                        moveNextAnswer(oldParaInnerHTML, oldParaIndex, secondParaIndex, secondAnswerIndexes, allParagraphs, paragraphStartIndexes)
-                                        // scrolling(secondParaIndex, allParagraphs);
-                                        oldParaIndex = secondParaIndex;
-                                        oldParaInnerHTML = secondParaInnerHTML;
-                                        break;
+                                        
+                                            moveNextAnswer(oldParaInnerHTML, oldParaIndex, secondParaIndex, secondAnswerIndexes, allParagraphs, paragraphStartIndexes)
+                                            oldParaIndex = secondParaIndex;
+                                            oldParaInnerHTML = secondParaInnerHTML;
+                                            break;
+                                        
+                                        
                                     case "3":
-                                        moveNextAnswer(oldParaInnerHTML, oldParaIndex, thirdParaIndex, thirdAnswerIndexes, allParagraphs, paragraphStartIndexes)
-                                        // scrolling(thirdParaIndex, allParagraphs);
-                                        oldParaIndex = thirdParaIndex;
-                                        oldParaInnerHTML = thirdParaInnerHTML;
-                                        break;
+                                        
+                                            moveNextAnswer(oldParaInnerHTML, oldParaIndex, thirdParaIndex, thirdAnswerIndexes, allParagraphs, paragraphStartIndexes)
+                                            oldParaIndex = thirdParaIndex;
+                                            oldParaInnerHTML = thirdParaInnerHTML;
+                                            break;
                                     default:
                                         break;
                                 }
@@ -199,6 +190,9 @@ chrome.runtime.onMessage.addListener(
                     )
                 }).catch(function (error) {
                     console.log(error);
+                    chrome.runtime.sendMessage({
+                        greeting: "Hi popup, catch error"
+                    })
                 })
         }
     }
@@ -249,7 +243,8 @@ function highlight(answerIndexes, paraIndex, allParagraphs, paragraphStartIndexe
     let answerStartIndex = answerIndexes[0] - paragraphStartIndexes[paraIndex];
     let answerEndIndex = answerIndexes[1] - paragraphStartIndexes[paraIndex];
     oldInnerText = allParagraphs[paraIndex].innerText;
-    const regex = /\s\s+/g
+    // const regex = /\s\s+/g
+    const regex = /\s+$/;
     innerText = oldInnerText.replace(regex, "")
     let color = "#FFA61F";
     var highlightedAnswer = "<span id='highlighted-answer' style='cursor: pointer; background-color: " + color + ";'>" + innerText.substring(answerStartIndex, answerEndIndex) + "</span>"
@@ -281,3 +276,8 @@ function moveNextAnswer(innerHTML, oldParaIndex, nextParaIndex, answerIndexes, a
     scrolling(nextParaIndex, allParagraphs);
 }
 // -----------------------------------------------------------------------------------------------
+function reloadDIV(div) {document.querySelector(div).innerHTML = document.querySelector(div).innerHTML ;}
+function updateDiv(div)
+{ 
+    $(div).load(window.location.href + div );
+}

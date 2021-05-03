@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function() {
     var search = document.getElementById("search-bar");
     var rating = document.getElementById("result-container")
     var progressBar = document.getElementById("progress-bar")
+    var resultContainer = document.getElementById("result-container")
     // search.addEventListener("oninput", function(event) {
     //     reload();
     // });
@@ -18,11 +19,20 @@ document.addEventListener("DOMContentLoaded", function() {
         if (event.keyCode === 13) {
             // Cancel the default action, if needed
             event.preventDefault();
+            // reload results
+            resultContainer.style.display = "none";
+            reloadDIV("result-container");
             // Trigger the button element with a click
             sendQuestion();
             progressBar.style.display = "block";
         }
         chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+            if(message.greeting === "Hi popup, catch error") {
+                progressBar.style.display = "none";
+                console.log("catch error");
+                // display <span></span>
+                // status.style.display = "block";
+            }
             if(message.greeting === "Hi popup, there are the answers") {
                 console.log("content -> popup " + message.greeting);
                 progressBar.style.display = "none";
@@ -47,7 +57,6 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function sendScrollingRequest(selectorID) {
-    console.log("test1");
     document.getElementById(selectorID).addEventListener("click", function () {
         var selectedAnswerValue = document.getElementById(selectorID).value
         console.log(selectedAnswerValue);
@@ -65,21 +74,7 @@ function sendScrollingRequest(selectorID) {
 }
 
 //-------------------------------------------------------------------------------
-// function sendScrollingRequest(selectorID) {
-//     var selectedAnswerValue = getRadioValue(selectorID);
-//     // determine the target tab
-//     chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
-//         var activeTab = tabs[0];
-//         console.log(tabs[0]);
-//             let msg = {
-//                 greeting: "Hi content. Scroll for me",
-//                 value: selectedAnswerValue
-//             }
-//         // send message
-//         chrome.tabs.sendMessage(tabs[0].id, msg)
-//     });
-// }
-
+function reloadDIV(div) {document.getElementById(div).innerHTML = document.getElementById(div).innerHTML ;}
 //-------------------------------------------------------------------------------
 function sendQuestion() {
     var question = document.getElementById("search-bar").value;
@@ -97,60 +92,16 @@ function sendQuestion() {
     });
 }
 
-// function reload() {
-//     // var checkInput = document.getElementById("search-bar");
-//     // console.log(checkInput);
+// function scrolling(position) {
+//     console.log(position);
+//     // starContainer.style.display = "block"
 //     chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
 //         var activeTab = tabs[0];
 //         console.log(tabs[0]);
 //             let msg = {
-//                 txt: "new session",
+//                 txt: position,
 //             }
 //         // send message
 //         chrome.tabs.sendMessage(tabs[0].id, msg)
 //     });
-// }
-
-
-
-function scrolling(position) {
-    console.log(position);
-    // starContainer.style.display = "block"
-    chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
-        var activeTab = tabs[0];
-        console.log(tabs[0]);
-            let msg = {
-                txt: position,
-            }
-        // send message
-        chrome.tabs.sendMessage(tabs[0].id, msg)
-    });
-}
-
-function scrollDown() {
-    chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
-        var activeTab = tabs[0];
-        console.log(tabs[0]);
-            let msg = {
-                txt: "down",
-            }
-        // send message
-        chrome.tabs.sendMessage(tabs[0].id, msg)
-    });
-}
-
-function scrollUp() {
-    chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
-        var activeTab = tabs[0];
-        console.log(tabs[0]);
-            let msg = {
-                txt: "up",
-            }
-        // send message
-        chrome.tabs.sendMessage(tabs[0].id, msg)
-    });
-}
-
-// function showDiv(element) {
-//    document.getElementById(element).style.display = "block";
 // }
