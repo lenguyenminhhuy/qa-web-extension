@@ -125,11 +125,8 @@ chrome.runtime.onMessage.addListener(
                     console.log(thirdAnswer);
 
                     console.log(paragraphStartIndexes);
-                    // console.log(`Answer: ${context.slice(response.data.index_0[0], response.data.index_0[1])}`);
-                    // console.log(`Answer: ${context.slice(response.data.index_1[0], response.data.index_1[1])}`);
-                    // console.log(`Answer: ${context.slice(response.data.index_2[0], response.data.index_2[1])}`);
 
-                    //3 returned answers' indexes
+                    //three returned answers' indexes
                     let firstAnswerIndexes = response.data.index_0
                     console.log(firstAnswerIndexes);
                     let secondAnswerIndexes = response.data.index_1
@@ -138,7 +135,7 @@ chrome.runtime.onMessage.addListener(
                     console.log(thirdAnswerIndexes);
 
 
-                    //3 paragraphs of 3 returned answers
+                    //three paragraphs of three returned answers
                     let firstParaIndex = getParagraphIndex(firstAnswerIndexes, paragraphStartIndexes);
                     console.log(`1st paragraph index: ${firstParaIndex}`);
                     let secondParaIndex = getParagraphIndex(secondAnswerIndexes, paragraphStartIndexes);
@@ -154,102 +151,58 @@ chrome.runtime.onMessage.addListener(
                     // highlight and scroll to the first answer
                     highlight(firstAnswerIndexes, firstParaIndex, allParagraphs, paragraphStartIndexes)
                     scrolling(firstParaIndex, allParagraphs)
+                    var oldParaIndex = firstParaIndex;
+                    var oldParaInnerHTML = firstParaInnerHTML;
 
                     let answerList = {
                         firstAnswer: firstAnswer,
                         secondAnswer: secondAnswer,
                         thirdAnswer: thirdAnswer
                     }
-
+                    
                     chrome.runtime.sendMessage({
-                        data: "Hello popup, how are you",
-                        answerList
-                    }, function (response) {
-                        console.dir(response);
+                        greeting: "Hi popup, there are the answers",
+                        firstAnswer: firstAnswer,
+                        secondAnswer: secondAnswer,
+                        thirdAnswer: thirdAnswer,
+                        answerList: answerList
                     });
 
-                    // Scroll to the next answer
-                    var current = 1;
                     chrome.runtime.onMessage.addListener(
                         function (request, sender, sendResponse) {
-                            // switch (current) {
-                            //     case 1:
-                            //         if(request.txt === "down") {
-                            //             moveNextAnswer(firstParaInnerHTML, firstParaIndex, secondParaIndex, secondAnswerIndexes, allParagraphs, paragraphStartIndexes)
-                            //             current = 2
-                            //             break;
-                            //         }
-                            //     case 2:
-                            //         if(request.txt === "down") {
-                            //             moveNextAnswer(secondParaInnerHTML, secondParaIndex, thirdParaIndex, thirdAnswerIndexes, allParagraphs, paragraphStartIndexes)
-                            //             current = 3
-                            //             break;
-                            //         }
-                            //         if(request.txt === "up") {
-                            //             moveNextAnswer(secondParaInnerHTML, secondParaIndex, firstParaIndex, firstAnswerIndexes, allParagraphs, paragraphStartIndexes)
-                            //             current = 1
-                            //             break;
-                            //         }
-                            //     case 3:
-                            //         if(request.txt === "up") {
-                            //             moveNextAnswer(thirdParaInnerHTML, thirdParaIndex, secondParaIndex, secondAnswerIndexes, allParagraphs, paragraphStartIndexes)
-                            //             current = 2
-                            //             break;
-                            //         }
-                            //     default:
-                            //         break;
-                            // }
-
-                            switch (current) {
-                                case 1:
-                                    if (request.txt === "2") {
-                                        moveNextAnswer(firstParaInnerHTML, firstParaIndex, secondParaIndex, secondAnswerIndexes, allParagraphs, paragraphStartIndexes)
-                                        current = 2
+                            if (request.greeting == "Hi content. Scroll for me") {
+                                var current = request.value;
+                                switch (current) {
+                                    case "1":
+                                        moveNextAnswer(oldParaInnerHTML, oldParaIndex, firstParaIndex, firstAnswerIndexes, allParagraphs, paragraphStartIndexes)
+                                        // scrolling(firstParaIndex, allParagraphs);
+                                        oldParaIndex = firstParaIndex;
+                                        oldParaInnerHTML = firstParaInnerHTML;
                                         break;
-                                    }
-                                    if (request.txt === "3") {
-                                        moveNextAnswer(firstParaInnerHTML, firstParaIndex, thirdParaIndex, thirdAnswerIndexes, allParagraphs, paragraphStartIndexes)
-                                        current = 3
+                                    case "2":
+                                        moveNextAnswer(oldParaInnerHTML, oldParaIndex, secondParaIndex, secondAnswerIndexes, allParagraphs, paragraphStartIndexes)
+                                        // scrolling(secondParaIndex, allParagraphs);
+                                        oldParaIndex = secondParaIndex;
+                                        oldParaInnerHTML = secondParaInnerHTML;
                                         break;
-                                    }
-                                case 2:
-                                    if (request.txt === "3") {
-                                        moveNextAnswer(secondParaInnerHTML, secondParaIndex, thirdParaIndex, thirdAnswerIndexes, allParagraphs, paragraphStartIndexes)
-                                        current = 3
+                                    case "3":
+                                        moveNextAnswer(oldParaInnerHTML, oldParaIndex, thirdParaIndex, thirdAnswerIndexes, allParagraphs, paragraphStartIndexes)
+                                        // scrolling(thirdParaIndex, allParagraphs);
+                                        oldParaIndex = thirdParaIndex;
+                                        oldParaInnerHTML = thirdParaInnerHTML;
                                         break;
-                                    }
-                                    if (request.txt === "1") {
-                                        moveNextAnswer(secondParaInnerHTML, secondParaIndex, firstParaIndex, firstAnswerIndexes, allParagraphs, paragraphStartIndexes)
-                                        current = 1
+                                    default:
                                         break;
-                                    }
-                                case 3:
-                                    if (request.txt === "2") {
-                                        moveNextAnswer(thirdParaInnerHTML, thirdParaIndex, secondParaIndex, secondAnswerIndexes, allParagraphs, paragraphStartIndexes)
-                                        current = 2
-                                        break;
-                                    }
-                                    if (request.txt === "1") {
-                                        moveNextAnswer(thirdParaInnerHTML, thirdParaIndex, firstParaIndex, firstAnswerIndexes, allParagraphs, paragraphStartIndexes)
-                                        current = 1
-                                        break;
-                                    }
-                                default:
-                                    break;
+                                }
                             }
                         }
                     )
                 }).catch(function (error) {
                     console.log(error);
                 })
-
-
         }
     }
 );
-//         }
-//     }
-// );
 
 
 // ***FUNCTION***
@@ -307,59 +260,24 @@ function highlight(answerIndexes, paraIndex, allParagraphs, paragraphStartIndexe
 
 // -----------------------------------------------------------------------------------------------    
 // Function remove highlight the answer in the paragraph
-function removeHighlight(innerHTML, curParaIndex, allParagraphs) {
-    // console.log("");
-    // console.log("Highlight removing...");
-    allParagraphs[curParaIndex].innerHTML = innerHTML;
+function removeHighlight(innerHTML, oldParaIndex, allParagraphs) {
+    if(oldParaIndex != null) {
+        allParagraphs[oldParaIndex].innerHTML = innerHTML;
+    } 
 }
 
 // -----------------------------------------------------------------------------------------------    
 // Function smooth scroll
 function scrolling(nextParaIndex, allParagraphs) {
-    console.log("Scrolling to paragraph" + nextParaIndex);
+    // console.log("Scrolling to paragraph" + nextParaIndex);
     allParagraphs[nextParaIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
 }
 
 // -----------------------------------------------------------------------------------------------    
 // Function scroll to next answer (include un-highlight the old one, highlight the new one)
-function moveNextAnswer(innerHTML, curParaIndex, nextParaIndex, answerIndexes, allParagraphs, paragraphStartIndexes) {
-    removeHighlight(innerHTML, curParaIndex, allParagraphs);
+function moveNextAnswer(innerHTML, oldParaIndex, nextParaIndex, answerIndexes, allParagraphs, paragraphStartIndexes) {
+    removeHighlight(innerHTML, oldParaIndex, allParagraphs);
     highlight(answerIndexes, nextParaIndex, allParagraphs, paragraphStartIndexes);
     scrolling(nextParaIndex, allParagraphs);
 }
 // -----------------------------------------------------------------------------------------------
-
-// function moveUDNextAnswer(request, current) {
-//     switch (current) {
-//         case 1:
-//             if(request.txt === "down") {
-//                 moveNextAnswer(firstParaInnerHTML, firstParaIndex, secondParaIndex, secondAnswerIndexes, allParagraphs, paragraphStartIndexes)
-//                 current = 2
-//                 break;
-//             }
-//         case 2:
-//             if(request.txt === "down") {
-//                 moveNextAnswer(secondParaInnerHTML, secondParaIndex, thirdParaIndex, thirdAnswerIndexes, allParagraphs, paragraphStartIndexes)
-//                 current = 3
-//                 break;
-//             }
-//             if(request.txt === "up") {
-//                 moveNextAnswer(secondParaInnerHTML, secondParaIndex, firstParaIndex, firstAnswerIndexes, allParagraphs, paragraphStartIndexes)
-//                 current = 1
-//                 break;
-//             }
-//         case 3:
-//             if(request.txt === "up") {
-//                 moveNextAnswer(thirdParaInnerHTML, thirdParaIndex, secondParaIndex, secondAnswerIndexes, allParagraphs, paragraphStartIndexes)
-//                 current = 2
-//                 break;
-//             }
-//         default:
-//             break;
-//     }
-// }
-// -----------------------------------------------------------------------------------------------    
-
-// function scrollToTop(element) {
-//   element.scrollIntoView({behavior: "smooth", block: "top"});
-// }

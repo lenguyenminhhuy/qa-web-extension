@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function() {
 //------------------------------Use enter----------------------------------------
 // Get the input field
     var search = document.getElementById("search-bar");
-    var rating = document.getElementById("rating")
+    var rating = document.getElementById("result-container")
     // search.addEventListener("oninput", function(event) {
     //     reload();
     // });
@@ -21,34 +21,62 @@ document.addEventListener("DOMContentLoaded", function() {
             sendQuestion();
         }
         chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-            console.log("ok");
-            rating.style.display = "block";
-            var firstReturnedAnswer = document.getElementById("firstReturnedAnswer");
-            var secondReturnedAnswer = document.getElementById("secondReturnedAnswer");
-            var thirdReturnedAnswer = document.getElementById("thirdReturnedAnswer");
-            firstReturnedAnswer.innerText = message.answerList.firstAnswer
-            secondReturnedAnswer.innerText = message.answerList.secondAnswer
-            thirdReturnedAnswer.innerText = message.answerList.thirdAnswer
-            sendResponse({
-                data: "I am fine, thank you. How is life in the background?"
-            }); 
-            document.getElementById("firstReturnedAnswer").addEventListener("click", scrolling(1));
-            document.getElementById("secondReturnedAnswer").addEventListener("click", scrolling(2));
-            document.getElementById("thirdReturnedAnswer").addEventListener("click", scrolling(3));
+            if(message.greeting === "Hi popup, there are the answers") {
+                console.log("content -> popup " + message.greeting);
+                rating.style.display = "block";
+                var firstReturnedAnswer = document.getElementById("firstReturnedAnswer");
+                var secondReturnedAnswer = document.getElementById("secondReturnedAnswer");
+                var thirdReturnedAnswer = document.getElementById("thirdReturnedAnswer");
+                firstReturnedAnswer.innerText = message.answerList.firstAnswer;
+                secondReturnedAnswer.innerText = message.answerList.secondAnswer;
+                thirdReturnedAnswer.innerText = message.answerList.thirdAnswer;
+                
+                // var choseAnswerValue = getRadioValue('first-answer-radio')
+                // var choseAnswerValue = getRadioValue('second-answer-radio')
+                // var choseAnswerValue = getRadioValue('third-answer-radio')
+                
+                sendScrollingRequest('first-answer-radio');
+                sendScrollingRequest('second-answer-radio');
+                sendScrollingRequest('third-answer-radio');
+            }
         });
-
-        // document.getElementById("firstReturnedAnswer").addEventListener("click", scrolling(1));
-        // document.getElementById("secondReturnedAnswer").addEventListener("click", scrolling(2));
-        // document.getElementById("thirdReturnedAnswer").addEventListener("click", scrolling(3));
-
-        // firstReturnedAnswer.addEventListener("click", scrolling("1", document.getElementById("rate-container-1")));
-        // secondReturnedAnswer.addEventListener("click", scrolling("2", document.getElementById("rate-container-2")));
-        // thirdReturnedAnswer.addEventListener("click", scrolling("3", document.getElementById("rate-container-3")));
-
-        // document.getElementById("down").addEventListener("click", scrollDown);
-        // document.getElementById("up").addEventListener("click", scrollUp);
     });
 });
+
+function sendScrollingRequest(selectorID) {
+    console.log("test1");
+    document.getElementById(selectorID).addEventListener("click", function () {
+        var selectedAnswerValue = document.getElementById(selectorID).value
+        console.log(selectedAnswerValue);
+        chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
+            var activeTab = tabs[0];
+            console.log(tabs[0]);
+                let msg = {
+                    greeting: "Hi content. Scroll for me",
+                    value: selectedAnswerValue
+                }
+            // send message
+            chrome.tabs.sendMessage(tabs[0].id, msg)
+        });
+    })
+}
+
+//-------------------------------------------------------------------------------
+// function sendScrollingRequest(selectorID) {
+//     var selectedAnswerValue = getRadioValue(selectorID);
+//     // determine the target tab
+//     chrome.tabs.query({currentWindow: true, active: true}, function (tabs){
+//         var activeTab = tabs[0];
+//         console.log(tabs[0]);
+//             let msg = {
+//                 greeting: "Hi content. Scroll for me",
+//                 value: selectedAnswerValue
+//             }
+//         // send message
+//         chrome.tabs.sendMessage(tabs[0].id, msg)
+//     });
+// }
+
 //-------------------------------------------------------------------------------
 function sendQuestion() {
     var question = document.getElementById("search-bar").value;
