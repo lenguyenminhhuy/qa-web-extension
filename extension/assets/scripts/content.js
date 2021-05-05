@@ -40,6 +40,7 @@ chrome.runtime.onMessage.addListener(
             }
             
             // document.querySelectorAll(target).contentWindow.location.reload(true);
+            // reloadDIV(innerHTML, allParagraphs)
 
             var allParagraphs = document.querySelectorAll(target);
             const allParaInnerHTML = allParagraphs.innerHTML;
@@ -162,26 +163,21 @@ chrome.runtime.onMessage.addListener(
                                 var current = request.value;
                                 switch (current) {
                                     case "1":
-                                        
-                                            moveNextAnswer(oldParaInnerHTML, oldParaIndex, firstParaIndex, firstAnswerIndexes, allParagraphs, paragraphStartIndexes)
-                                            oldParaIndex = firstParaIndex;
-                                            oldParaInnerHTML = firstParaInnerHTML;
-                                            break;
+                                        moveNextAnswer(oldParaInnerHTML, oldParaIndex, firstParaIndex, firstAnswerIndexes, allParagraphs, paragraphStartIndexes)
+                                        oldParaIndex = firstParaIndex;
+                                        oldParaInnerHTML = firstParaInnerHTML;
+                                        break;
                                         
                                     case "2":
-                                        
-                                            moveNextAnswer(oldParaInnerHTML, oldParaIndex, secondParaIndex, secondAnswerIndexes, allParagraphs, paragraphStartIndexes)
-                                            oldParaIndex = secondParaIndex;
-                                            oldParaInnerHTML = secondParaInnerHTML;
-                                            break;
-                                        
-                                        
+                                        moveNextAnswer(oldParaInnerHTML, oldParaIndex, secondParaIndex, secondAnswerIndexes, allParagraphs, paragraphStartIndexes)
+                                        oldParaIndex = secondParaIndex;
+                                        oldParaInnerHTML = secondParaInnerHTML;
+                                        break;
                                     case "3":
-                                        
-                                            moveNextAnswer(oldParaInnerHTML, oldParaIndex, thirdParaIndex, thirdAnswerIndexes, allParagraphs, paragraphStartIndexes)
-                                            oldParaIndex = thirdParaIndex;
-                                            oldParaInnerHTML = thirdParaInnerHTML;
-                                            break;
+                                        moveNextAnswer(oldParaInnerHTML, oldParaIndex, thirdParaIndex, thirdAnswerIndexes, allParagraphs, paragraphStartIndexes)
+                                        oldParaIndex = thirdParaIndex;
+                                        oldParaInnerHTML = thirdParaInnerHTML;
+                                        break;
                                     default:
                                         break;
                                 }
@@ -189,11 +185,11 @@ chrome.runtime.onMessage.addListener(
                         }
                     )
                 }).catch(function (error) {
-                    console.log(error);
-                    chrome.runtime.sendMessage({
-                        greeting: "Hi popup, catch error"
+                        console.log(error);
+                        chrome.runtime.sendMessage({
+                            greeting: "Hi popup, catch error"
+                        })
                     })
-                })
         }
     }
 );
@@ -261,11 +257,17 @@ function removeHighlight(innerHTML, oldParaIndex, allParagraphs) {
     } 
 }
 
+// function reloadDIV(innerHTML, allParagraphs) {
+//     allParagraphs.innerHTML = innerHTML;
+// }
+
 // -----------------------------------------------------------------------------------------------    
 // Function smooth scroll
 function scrolling(nextParaIndex, allParagraphs) {
     // console.log("Scrolling to paragraph" + nextParaIndex);
-    allParagraphs[nextParaIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    if((nextParaIndex != "0") || (nextParaIndex != 0)) {
+        allParagraphs[nextParaIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
 }
 
 // -----------------------------------------------------------------------------------------------    
@@ -276,8 +278,8 @@ function moveNextAnswer(innerHTML, oldParaIndex, nextParaIndex, answerIndexes, a
     scrolling(nextParaIndex, allParagraphs);
 }
 // -----------------------------------------------------------------------------------------------
-function reloadDIV(div) {document.querySelector(div).innerHTML = document.querySelector(div).innerHTML ;}
-function updateDiv(div)
-{ 
-    $(div).load(window.location.href + div );
-}
+// function reloadDIV(div) {document.querySelector(div).innerHTML = document.querySelector(div).innerHTML ;}
+// function updateDiv(div)
+// { 
+//     $(div).load(window.location.href + div );
+// }

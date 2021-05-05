@@ -10,9 +10,7 @@ document.addEventListener("DOMContentLoaded", function() {
     var rating = document.getElementById("result-container")
     var progressBar = document.getElementById("progress-bar")
     var resultContainer = document.getElementById("result-container")
-    // search.addEventListener("oninput", function(event) {
-    //     reload();
-    // });
+
     // Execute a function when the user releases a key on the keyboard
     search.addEventListener("keyup", function(event) {
         // Number 13 is the "Enter" key on the keyboard
@@ -44,9 +42,18 @@ document.addEventListener("DOMContentLoaded", function() {
                 secondReturnedAnswer.innerText = message.answerList.secondAnswer;
                 thirdReturnedAnswer.innerText = message.answerList.thirdAnswer;
                 
-                // var choseAnswerValue = getRadioValue('first-answer-radio')
-                // var choseAnswerValue = getRadioValue('second-answer-radio')
-                // var choseAnswerValue = getRadioValue('third-answer-radio')
+                if ((firstReturnedAnswer.innerText == null) || (firstReturnedAnswer.innerText == "")) {
+                    var firstReturnedAnswerBox = document.getElementById('result-elm-1');
+                    firstReturnedAnswerBox.style.display = "none";
+                };
+                if ((secondReturnedAnswer.innerText == null) || (secondReturnedAnswer.innerText == "")) {
+                    var secondReturnedAnswerBox = document.getElementById('result-elm-2');
+                 secondReturnedAnswerBox.style.display = "none";
+                };
+                if ((thirdReturnedAnswer.innerText == null) || (thirdReturnedAnswer.innerText == "")) {
+                    var thirdReturnedAnswerBox = document.getElementById('result-elm-3');
+                    thirdReturnedAnswerBox.style.display = "none";
+                };
                 
                 sendScrollingRequest('first-answer-radio');
                 sendScrollingRequest('second-answer-radio');
