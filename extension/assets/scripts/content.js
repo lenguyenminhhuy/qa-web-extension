@@ -14,20 +14,22 @@ const trustedURLs = ['www.theguardian.com', 'www.bbc.com', '127.0.0.1'];
 var host = location.hostname;
 
 var target;
+var header_target;
 switch (host) {
     case 'www.theguardian.com':
-        target = 'body h1, main>div>div>p'
+        target = 'main>div>div>p';
+        header_target = 'body h1';
         break;
     case 'www.bbc.com':
-        target = 'article h1, div>p';
+        target = 'div>p';
+        header_target = 'article h1';
         break;
 
     default:
         target = 'body div p'
+        header_target = 'body h1';
         break;
 }
-// var targetOrg = document.querySelectorAll(target);
-// var targetInnerHTML = targetOrg.innerHTML;
 
 
 chrome.runtime.onMessage.addListener(
@@ -38,16 +40,13 @@ chrome.runtime.onMessage.addListener(
             if (!trustedURLs.includes(host)) {
                 alert("MRC system has not been optimized for this webpage.\nThe result can be incorrect.")
             }
-            
-            // document.querySelectorAll(target).contentWindow.location.reload(true);
-            // reloadDIV(innerHTML, allParagraphs)
 
+            var articleHeader = document.querySelector(header_target).innerText;
+            console.log(articleHeader);
             var allParagraphs = document.querySelectorAll(target);
             const allParaInnerHTML = allParagraphs.innerHTML;
-            console.log(1);
             document.querySelectorAll(target).innerHTML = allParaInnerHTML;
             console.log(document.querySelectorAll(target).innerHTML);
-            console.log(2);
 
             var data = {};
 
@@ -152,9 +151,11 @@ chrome.runtime.onMessage.addListener(
                         thirdAnswer: thirdAnswer
                     }
                     
+            
                     chrome.runtime.sendMessage({
                         greeting: "Hi popup, there are the answers",
-                        answerList: answerList
+                        articleHeader: articleHeader,
+                        answerList: answerList,
                     });
 
                     chrome.runtime.onMessage.addListener(

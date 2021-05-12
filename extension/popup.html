@@ -25,7 +25,7 @@
                     <span class="version">(0.0.1)</span>
                 </h1>
             </div>
-            <div class="form-group">
+            <div class="form-group" id="form">
                 <label for="searching"></label>
                 <input
                     required
@@ -35,10 +35,11 @@
                     type="text"
                     autocomplete="off"
                 />
-                <div class="button-container">
+                <button id="submit-button"></button>
+                <!-- <div class="button-container">
                     <i id="up" class="arrow-btn ti-angle-up"></i>
                     <i id="down" class="arrow-btn ti-angle-down"></i>
-                </div>
+                </div> -->
             </div>
             <div id="progress">
                 <span id="status"></span>
@@ -145,63 +146,21 @@
                     </label>
                 </div>
             </div>
-
-            <!-- <div class="rating" id="rating">
-                <div class="answer-container">
-                    <div class="answer">
-                        <p class="answer-header">1st answer:</p>
-                        <p id="firstReturnedAnswer" class="answer-main">
-                            First First First First First
-                        </p>
-                    </div>
-                    <div class="rate-container" id="rate-container-1">
-                        <div class="stars" id="stars1">
-                            <input type="radio" name="rate1" id="rate-1-5" />
-                            <label
-                                name="rate1"
-                                for="rate-1-5"
-                                class="fas fa-star"
-                            ></label>
-                        </div>
-                    </div>
-                </div>
-                <div class="answer-container">
-                    <div class="answer">
-                        <p class="answer-header">2nd answer:</p>
-                        <p id="secondReturnedAnswer" class="answer-main">
-                            Second Second Second Second Second Second Second
-                        </p>
-                    </div>
-                    <div class="rate-container" id="rate-container-2">
-                        <div class="stars" id="stars2">
-                            <input type="radio" name="rate2" id="rate-2-5" />
-                            <label
-                                name="rate2"
-                                for="rate-2-5"
-                                class="fas fa-star"
-                            ></label>
-                        </div>
-                    </div>
-                </div>
-                <div class="answer-container">
-                    <div class="answer">
-                        <p class="answer-header">3rd answer:</p>
-                        <p id="thirdReturnedAnswer" class="answer-main"></p>
-                    </div>
-                    <div class="rate-container" id="rate-container-3">
-                        <div class="stars" id="stars3">
-                            <input type="radio" name="rate3" id="rate-3-5" />
-                            <label
-                                name="rate3"
-                                for="rate-3-5"
-                                class="fas fa-star"
-                            ></label>
-                        </div>
-                    </div>
-                </div>
-            </div> -->
         </div>
         <!-- <script type="text/javascript" src="https://unpkg.com/axios/dist/axios.min.js"></script> -->
     </body>
     <footer></footer>
+    <!-- <script> -->
+    <!-- // Validator({ // form: "form", // errorSelector: ".form-message", // rules:
+    [ // Validator.isRequired("#first-name", 3), //
+    Validator.isRequired("#last-name", 3), // Validator.isRequired("#address",
+    3), // Validator.isRequired("#city", 3), //
+    Validator.isRequired("#business-name", 3), //
+    Validator.isRequired("#store-name", 3), // Validator.isEmail("#email"), //
+    Validator.isPhoneNumber("#phone-number", 9, 11), //
+    Validator.isPassword("#password", 8, 20), // Validator.isRetypePassword( //
+    "#retype-password", // function getPassword() { // return
+    document.querySelector(".form #password").value; // } // ), //
+    Validator.isZipcode("#zipcode", 4, 6), // ], // }); -->
+    <!-- </script> -->
 </html>

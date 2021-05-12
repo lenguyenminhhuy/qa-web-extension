@@ -56,6 +56,10 @@ footer {
     margin-bottom: 5px;
 }
 
+.form-group button {
+    display: none;
+}
+
 #search-bar {
     width: 100%;
     height: fit-content;
