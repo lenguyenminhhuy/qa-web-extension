@@ -31,7 +31,11 @@ switch (host) {
         break;
 }
 
-chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
+chrome.runtime.onMessage.addListener(async function (
+    request,
+    sender,
+    sendResponse
+) {
     if (request.question === "") {
         console.log("question null");
     } else if (request.txt === "question here" && request.question !== "") {
@@ -41,8 +45,6 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
             );
         }
 
-        var articleHeader = document.querySelector(header_target).innerText;
-        console.log(articleHeader);
         var allParagraphs = document.querySelectorAll(target);
         const allParaInnerHTML = allParagraphs.innerHTML;
         document.querySelectorAll(target).innerHTML = allParaInnerHTML;
@@ -109,141 +111,150 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 
         // send data to server
         console.log("Sending...");
-        axios(config)
-            .then(function (response) {
-                //console.log(response.data);
-                let firstAnswer = context.slice(
-                    response.data.index_0[0],
-                    response.data.index_0[1]
-                );
-                let secondAnswer = context.slice(
-                    response.data.index_1[0],
-                    response.data.index_1[1]
-                );
-                let thirdAnswer = context.slice(
-                    response.data.index_2[0],
-                    response.data.index_2[1]
-                );
-                console.log(firstAnswer);
-                console.log(secondAnswer);
-                console.log(thirdAnswer);
 
-                console.log(paragraphStartIndexes);
+        var response = await axios(config);
+        console.log(config);
+        // .then(function (response) {
+        //console.log(response.data);
+        let firstAnswer = context.slice(
+            response.data.index_0[0],
+            response.data.index_0[1]
+        );
+        let secondAnswer = context.slice(
+            response.data.index_1[0],
+            response.data.index_1[1]
+        );
+        let thirdAnswer = context.slice(
+            response.data.index_2[0],
+            response.data.index_2[1]
+        );
+        console.log(firstAnswer);
+        console.log(secondAnswer);
+        console.log(thirdAnswer);
 
-                //three returned answers' indexes
-                let firstAnswerIndexes = response.data.index_0;
-                console.log(firstAnswerIndexes);
-                let secondAnswerIndexes = response.data.index_1;
-                console.log(secondAnswerIndexes);
-                let thirdAnswerIndexes = response.data.index_2;
-                console.log(thirdAnswerIndexes);
+        console.log(paragraphStartIndexes);
 
-                //three paragraphs of three returned answers
-                let firstParaIndex = getParagraphIndex(
-                    firstAnswerIndexes,
-                    paragraphStartIndexes
-                );
-                console.log(`1st paragraph index: ${firstParaIndex}`);
-                let secondParaIndex = getParagraphIndex(
-                    secondAnswerIndexes,
-                    paragraphStartIndexes
-                );
-                console.log(`2nd paragraph index: ${secondParaIndex}`);
-                let thirdParaIndex = getParagraphIndex(
-                    thirdAnswerIndexes,
-                    paragraphStartIndexes
-                );
-                console.log(`3rd paragraph index: ${thirdParaIndex}`);
+        //three returned answers' indexes
+        let firstAnswerIndexes = response.data.index_0;
+        console.log(firstAnswerIndexes);
+        let secondAnswerIndexes = response.data.index_1;
+        console.log(secondAnswerIndexes);
+        let thirdAnswerIndexes = response.data.index_2;
+        console.log(thirdAnswerIndexes);
 
-                //3 raw innerHTML of 3 returned answers
-                let firstParaInnerHTML =
-                    allParagraphs[firstParaIndex].innerHTML;
-                let secondParaInnerHTML =
-                    allParagraphs[secondParaIndex].innerHTML;
-                let thirdParaInnerHTML =
-                    allParagraphs[thirdParaIndex].innerHTML;
+        //three paragraphs of three returned answers
+        let firstParaIndex = getParagraphIndex(
+            firstAnswerIndexes,
+            paragraphStartIndexes
+        );
+        console.log(`1st paragraph index: ${firstParaIndex}`);
+        let secondParaIndex = getParagraphIndex(
+            secondAnswerIndexes,
+            paragraphStartIndexes
+        );
+        console.log(`2nd paragraph index: ${secondParaIndex}`);
+        let thirdParaIndex = getParagraphIndex(
+            thirdAnswerIndexes,
+            paragraphStartIndexes
+        );
+        console.log(`3rd paragraph index: ${thirdParaIndex}`);
 
-                // highlight and scroll to the first answer
-                highlight(
-                    firstAnswerIndexes,
-                    firstParaIndex,
-                    allParagraphs,
-                    paragraphStartIndexes
-                );
-                scrolling(firstParaIndex, allParagraphs);
-                var oldParaIndex = firstParaIndex;
-                var oldParaInnerHTML = firstParaInnerHTML;
+        //3 raw innerHTML of 3 returned answers
+        let firstParaInnerHTML = allParagraphs[firstParaIndex].innerHTML;
+        let secondParaInnerHTML = allParagraphs[secondParaIndex].innerHTML;
+        let thirdParaInnerHTML = allParagraphs[thirdParaIndex].innerHTML;
 
-                let answerList = {
-                    firstAnswer: firstAnswer,
-                    secondAnswer: secondAnswer,
-                    thirdAnswer: thirdAnswer,
-                };
+        // highlight and scroll to the first answer
+        highlight(
+            firstAnswerIndexes,
+            firstParaIndex,
+            allParagraphs,
+            paragraphStartIndexes
+        );
+        scrolling(firstParaIndex, allParagraphs);
+        var oldParaIndex = firstParaIndex;
+        var oldParaInnerHTML = firstParaInnerHTML;
 
-                chrome.runtime.sendMessage({
-                    greeting: "Hi popup, there are the answers",
-                    articleHeader: articleHeader,
-                    answerList: answerList,
-                });
+        let answerList = {
+            firstAnswer: firstAnswer,
+            secondAnswer: secondAnswer,
+            thirdAnswer: thirdAnswer,
+        };
 
-                chrome.runtime.onMessage.addListener(function (
-                    request,
-                    sender,
-                    sendResponse
-                ) {
-                    if (request.greeting == "Hi content. Scroll for me") {
-                        var current = request.value;
-                        switch (current) {
-                            case "1":
-                                moveNextAnswer(
-                                    oldParaInnerHTML,
-                                    oldParaIndex,
-                                    firstParaIndex,
-                                    firstAnswerIndexes,
-                                    allParagraphs,
-                                    paragraphStartIndexes
-                                );
-                                oldParaIndex = firstParaIndex;
-                                oldParaInnerHTML = firstParaInnerHTML;
-                                break;
+        chrome.runtime.sendMessage({
+            greeting: "Hi popup, there are the answers",
+            answerList: answerList,
+        });
 
-                            case "2":
-                                moveNextAnswer(
-                                    oldParaInnerHTML,
-                                    oldParaIndex,
-                                    secondParaIndex,
-                                    secondAnswerIndexes,
-                                    allParagraphs,
-                                    paragraphStartIndexes
-                                );
-                                oldParaIndex = secondParaIndex;
-                                oldParaInnerHTML = secondParaInnerHTML;
-                                break;
-                            case "3":
-                                moveNextAnswer(
-                                    oldParaInnerHTML,
-                                    oldParaIndex,
-                                    thirdParaIndex,
-                                    thirdAnswerIndexes,
-                                    allParagraphs,
-                                    paragraphStartIndexes
-                                );
-                                oldParaIndex = thirdParaIndex;
-                                oldParaInnerHTML = thirdParaInnerHTML;
-                                break;
-                            default:
-                                break;
-                        }
-                    }
-                });
-            })
-            .catch(function (error) {
-                console.log(error);
-                chrome.runtime.sendMessage({
-                    greeting: "Hi popup, catch error",
-                });
-            });
+        var articleHeader = document.querySelector(header_target).innerText;
+        var articleURL = window.location.href;
+        console.log(articleURL);
+        chrome.runtime.sendMessage({
+            greeting: "Hi popup, there are url and header",
+            articleHeader: articleHeader,
+            articleURL: articleURL,
+        });
+
+        chrome.runtime.onMessage.addListener(function (
+            request,
+            sender,
+            sendResponse
+        ) {
+            if (request.greeting == "Hi content. Scroll for me") {
+                var current = request.value;
+                switch (current) {
+                    case "1":
+                        moveNextAnswer(
+                            oldParaInnerHTML,
+                            oldParaIndex,
+                            firstParaIndex,
+                            firstAnswerIndexes,
+                            allParagraphs,
+                            paragraphStartIndexes
+                        );
+                        oldParaIndex = firstParaIndex;
+                        oldParaInnerHTML = firstParaInnerHTML;
+                        break;
+
+                    case "2":
+                        moveNextAnswer(
+                            oldParaInnerHTML,
+                            oldParaIndex,
+                            secondParaIndex,
+                            secondAnswerIndexes,
+                            allParagraphs,
+                            paragraphStartIndexes
+                        );
+                        oldParaIndex = secondParaIndex;
+                        oldParaInnerHTML = secondParaInnerHTML;
+                        break;
+                    case "3":
+                        moveNextAnswer(
+                            oldParaInnerHTML,
+                            oldParaIndex,
+                            thirdParaIndex,
+                            thirdAnswerIndexes,
+                            allParagraphs,
+                            paragraphStartIndexes
+                        );
+                        oldParaIndex = thirdParaIndex;
+                        oldParaInnerHTML = thirdParaInnerHTML;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        });
+        // })
+        // .catch(function (error) {
+        //     console.log(error);
+        //     chrome.runtime.sendMessage({
+        //         greeting: "Hi popup, catch error",
+        //     });
+        // });
     }
+
+    // here
 });
 
 // ***FUNCTION***
@@ -328,7 +339,6 @@ function removeHighlight(innerHTML, oldParaIndex, allParagraphs) {
 // -----------------------------------------------------------------------------------------------
 // Function smooth scroll
 function scrolling(nextParaIndex, allParagraphs) {
-    // console.log("Scrolling to paragraph" + nextParaIndex);
     if (nextParaIndex != "0" || nextParaIndex != 0) {
         allParagraphs[nextParaIndex].scrollIntoView({
             behavior: "smooth",
