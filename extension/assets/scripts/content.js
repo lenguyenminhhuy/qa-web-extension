@@ -48,10 +48,6 @@ chrome.runtime.onMessage.addListener(async function (request) {
         }
 
         var allParagraphs = document.querySelectorAll(target);
-        // const allParaInnerHTML = allParagraphs.innerHTML;
-        // document.querySelectorAll(target).innerHTML = allParaInnerHTML;
-        // console.log(document.querySelectorAll(target).innerHTML);
-
         var data = {};
 
         // save text type paragraphs to data
@@ -61,12 +57,6 @@ chrome.runtime.onMessage.addListener(async function (request) {
             data[index] = data[index].replace(/(\r\n|\n|\r)/gm, "");
             index++;
         }
-
-        // log the input question which sent from popup
-        // console.log("Your question: " + request.question);
-
-        // change to json
-        // var jsonData = JSON.stringify(data);
 
         // create context
         // data = testData
@@ -183,11 +173,13 @@ chrome.runtime.onMessage.addListener(async function (request) {
             thirdAnswer: thirdAnswer,
         };
 
+        // send the answer from model to popup to display
         chrome.runtime.sendMessage({
             greeting: "Hi popup, there are the answers",
             answerList: answerList,
         });
 
+        // send header and url to popup to post to server
         var articleHeader = document.querySelector(header_target).innerText;
         var articleURL = window.location.href;
         console.log(articleURL);
@@ -197,11 +189,8 @@ chrome.runtime.onMessage.addListener(async function (request) {
             articleURL: articleURL,
         });
 
-        chrome.runtime.onMessage.addListener(function (
-            request,
-            sender,
-            sendResponse
-        ) {
+        // listen to request to scroll
+        chrome.runtime.onMessage.addListener(function (request) {
             if (request.greeting == "Hi content. Scroll for me") {
                 var current = request.value;
                 switch (current) {
@@ -247,16 +236,7 @@ chrome.runtime.onMessage.addListener(async function (request) {
                 }
             }
         });
-        // })
-        // .catch(function (error) {
-        //     console.log(error);
-        //     chrome.runtime.sendMessage({
-        //         greeting: "Hi popup, catch error",
-        //     });
-        // });
     }
-
-    // here
 });
 
 // ***FUNCTION***
