@@ -26,11 +26,11 @@ document.addEventListener("DOMContentLoaded", function () {
         // Number 13 is the "Enter" key on the keyboard
         if (event.keyCode === 13) {
             var question = document.getElementById("search-bar").value;
-            // Cancel the default action, if needed
-            // event.preventDefault();
-            // event.stopPropagation();
-            // Trigger the button element with a click
             console.log(question);
+            // Cancel the default action, if needed
+            event.preventDefault();
+
+            // Trigger the button element with a click
             if (question === "") {
                 resultContainer.style.display = "none";
                 console.log("invalid");

@@ -31,11 +31,13 @@ switch (host) {
         break;
 }
 
-chrome.runtime.onMessage.addListener(async function (
-    request,
-    sender,
-    sendResponse
-) {
+const rawBodyHTML = document.getElementsByTagName("BODY")[0].innerHTML;
+
+chrome.runtime.onMessage.addListener(async function (request) {
+    // re-render page
+    var bodyContent = document.getElementsByTagName("BODY")[0];
+    bodyContent.innerHTML = rawBodyHTML;
+
     if (request.question === "") {
         console.log("question null");
     } else if (request.txt === "question here" && request.question !== "") {
@@ -46,9 +48,9 @@ chrome.runtime.onMessage.addListener(async function (
         }
 
         var allParagraphs = document.querySelectorAll(target);
-        const allParaInnerHTML = allParagraphs.innerHTML;
-        document.querySelectorAll(target).innerHTML = allParaInnerHTML;
-        console.log(document.querySelectorAll(target).innerHTML);
+        // const allParaInnerHTML = allParagraphs.innerHTML;
+        // document.querySelectorAll(target).innerHTML = allParaInnerHTML;
+        // console.log(document.querySelectorAll(target).innerHTML);
 
         var data = {};
 
