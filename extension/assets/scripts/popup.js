@@ -51,70 +51,85 @@ document.addEventListener("DOMContentLoaded", function () {
             // display <span></span>
             // status.style.display = "block";
         } else if (message.greeting === "Hi popup, there are the answers") {
-            console.log(message.greeting);
-
             // re-render
             progressBar.style.display = "none";
-            resultContainer.style.display = "block";
             reRenderRadio("star-radio");
             reRenderRadio("answer-radio");
 
-            var firstReturnedAnswer = document.getElementById(
-                "firstReturnedAnswer"
-            );
-            var secondReturnedAnswer = document.getElementById(
-                "secondReturnedAnswer"
-            );
-            var thirdReturnedAnswer = document.getElementById(
-                "thirdReturnedAnswer"
-            );
-
-            firstReturnedAnswer.innerText = message.answerList.firstAnswer;
-            secondReturnedAnswer.innerText = message.answerList.secondAnswer;
-            thirdReturnedAnswer.innerText = message.answerList.thirdAnswer;
-
-            var firstReturnedAnswerBox =
-                document.getElementById("result-elm-1");
-            var secondReturnedAnswerBox =
-                document.getElementById("result-elm-2");
-            var thirdReturnedAnswerBox =
-                document.getElementById("result-elm-3");
+            console.log(message.greeting);
 
             if (
-                firstReturnedAnswer.innerText == null ||
-                firstReturnedAnswer.innerText == ""
+                (message.answerList.firstAnswer == null ||
+                    message.answerList.firstAnswer == "") &&
+                (message.answerList.secondAnswer == null ||
+                    message.answerList.secondAnswer == "") &&
+                (message.answerList.thirdAnswer == null ||
+                    message.answerList.thirdAnswer == "")
             ) {
-                firstReturnedAnswerBox.style.display = "none";
+                console.log("no answers for this question");
+                resultContainer.style.display = "none";
             } else {
-                firstReturnedAnswerBox.style.display = "none";
-                firstReturnedAnswerBox.style.display = "block";
-            }
+                console.log("has answer for this question");
+                resultContainer.style.display = "block";
 
-            if (
-                secondReturnedAnswer.innerText == null ||
-                secondReturnedAnswer.innerText == ""
-            ) {
-                secondReturnedAnswerBox.style.display = "none";
-            } else {
-                secondReturnedAnswerBox.style.display = "none";
-                secondReturnedAnswerBox.style.display = "block";
-            }
+                var firstReturnedAnswer = document.getElementById(
+                    "firstReturnedAnswer"
+                );
+                var secondReturnedAnswer = document.getElementById(
+                    "secondReturnedAnswer"
+                );
+                var thirdReturnedAnswer = document.getElementById(
+                    "thirdReturnedAnswer"
+                );
 
-            if (
-                thirdReturnedAnswer.innerText == null ||
-                thirdReturnedAnswer.innerText == ""
-            ) {
-                thirdReturnedAnswerBox.style.display = "none";
-            } else {
-                thirdReturnedAnswerBox.style.display = "none";
-                thirdReturnedAnswerBox.style.display = "block";
-            }
+                firstReturnedAnswer.innerText = message.answerList.firstAnswer;
+                secondReturnedAnswer.innerText =
+                    message.answerList.secondAnswer;
+                thirdReturnedAnswer.innerText = message.answerList.thirdAnswer;
 
-            returnedAnswers = Object.assign(returnedAnswers, {
-                firstReturnedAnswer: message.answerList.firstAnswer,
-                secondReturnedAnswer: message.answerList.secondAnswer,
-                thirdReturnedAnswer: message.answerList.thirdAnswer,
-            });
+                var firstReturnedAnswerBox =
+                    document.getElementById("result-elm-1");
+                var secondReturnedAnswerBox =
+                    document.getElementById("result-elm-2");
+                var thirdReturnedAnswerBox =
+                    document.getElementById("result-elm-3");
+
+                if (
+                    firstReturnedAnswer.innerText == null ||
+                    firstReturnedAnswer.innerText == ""
+                ) {
+                    firstReturnedAnswerBox.style.display = "none";
+                } else {
+                    firstReturnedAnswerBox.style.display = "none";
+                    firstReturnedAnswerBox.style.display = "block";
+                }
+
+                if (
+                    secondReturnedAnswer.innerText == null ||
+                    secondReturnedAnswer.innerText == ""
+                ) {
+                    secondReturnedAnswerBox.style.display = "none";
+                } else {
+                    secondReturnedAnswerBox.style.display = "none";
+                    secondReturnedAnswerBox.style.display = "block";
+                }
+
+                if (
+                    thirdReturnedAnswer.innerText == null ||
+                    thirdReturnedAnswer.innerText == ""
+                ) {
+                    thirdReturnedAnswerBox.style.display = "none";
+                } else {
+                    thirdReturnedAnswerBox.style.display = "none";
+                    thirdReturnedAnswerBox.style.display = "block";
+                }
+
+                returnedAnswers = Object.assign(returnedAnswers, {
+                    firstReturnedAnswer: message.answerList.firstAnswer,
+                    secondReturnedAnswer: message.answerList.secondAnswer,
+                    thirdReturnedAnswer: message.answerList.thirdAnswer,
+                });
+            }
         }
     });
 
