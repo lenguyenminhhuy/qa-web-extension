@@ -35,12 +35,12 @@ const rawBodyHTML = document.getElementsByTagName("BODY")[0].innerHTML;
 
 chrome.runtime.onMessage.addListener(async function (request) {
     // re-render page
-    var bodyContent = document.getElementsByTagName("BODY")[0];
-    bodyContent.innerHTML = rawBodyHTML;
 
     if (request.question === "") {
         console.log("question null");
     } else if (request.txt === "question here" && request.question !== "") {
+        var bodyContent = document.getElementsByTagName("BODY")[0];
+        bodyContent.innerHTML = rawBodyHTML;
         if (!trustedURLs.includes(host)) {
             alert(
                 "MRC system has not been optimized for this webpage.\nThe result can be incorrect."
