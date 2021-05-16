@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Machine Reading",
-    "description": "blah blah ........",
+    "description": "Ask any questions about the article you are reading and let the computer answer it for you.",
     "version": "1.0",
     "content_scripts": [
         {
