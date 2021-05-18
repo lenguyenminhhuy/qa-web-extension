@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
     "name": "Machine Reading",
-    "description": "blah blah ........",
+    "description": "Ask any questions about the article you are reading and let the computer answer for you.",
     "version": "1.0",
     "content_scripts": [
         {
@@ -13,14 +13,18 @@
 
     "permissions": ["tabs", "background"],
 
-    "icons": {},
+    "icons": {
+        "16": "/assets/images/HHM16.png",
+        "48": "/assets/images/HHM48.png",
+        "128": "/assets/images/HHM128.png"
+    },
 
     "background": {
         "scripts": []
     },
 
     "browser_action": {
-        "default_icon": "./assets/images/icon.png",
+        "default_icon": "/assets/images/HHM16.png",
         "default_title": "Read for me",
         "default_popup": "popup.html"
     },
