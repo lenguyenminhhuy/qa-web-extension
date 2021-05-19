@@ -232,3 +232,9 @@ input[name="star-radio"]:checked ~ label[name="rate"] {
 .result-container input[name="star-radio"] {
     display: none;
 }
+
+#status {
+    padding-left: 12px;
+    color: rgb(214, 0, 0);
+    display: none;
+}

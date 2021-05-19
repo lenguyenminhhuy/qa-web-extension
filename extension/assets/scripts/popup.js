@@ -9,9 +9,10 @@ document.addEventListener("DOMContentLoaded", function () {
     var search = document.getElementById("search-bar");
     var progressBar = document.getElementById("progress-bar");
     var resultContainer = document.getElementById("result-container");
+    var statusContainer = document.getElementById("status");
     var objURLandHeader = {
-        article_header: "",
-        // article_url: "",
+        // article_header: "",
+        article_url: "",
         question: "",
         best_answer: "",
     };
@@ -25,6 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
     search.addEventListener("keyup", function (event) {
         // Number 13 is the "Enter" key on the keyboard
         if (event.keyCode === 13) {
+            statusContainer.style.display = "none";
             var question = document.getElementById("search-bar").value;
             console.log(question);
             // Cancel the default action, if needed
@@ -32,10 +34,13 @@ document.addEventListener("DOMContentLoaded", function () {
 
             // Trigger the button element with a click
             if (question === "") {
+                statusContainer.innerText = "Please enter your question again!";
+                statusContainer.style.display = "block";
                 resultContainer.style.display = "none";
                 console.log("invalid");
                 return false;
             } else if (question !== "") {
+                statusContainer.style.display = "none";
                 sendQuestion(question);
                 resultContainer.style.display = "none";
                 progressBar.style.display = "block";
@@ -52,6 +57,7 @@ document.addEventListener("DOMContentLoaded", function () {
             // status.style.display = "block";
         } else if (message.greeting === "Hi popup, there are the answers") {
             // re-render
+            statusContainer.style.display = "none";
             progressBar.style.display = "none";
             reRenderRadio("star-radio");
             reRenderRadio("answer-radio");
@@ -66,7 +72,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 (message.answerList.thirdAnswer == null ||
                     message.answerList.thirdAnswer == "")
             ) {
-                console.log("no answers for this question");
+                console.log("no answer for this question");
+                statusContainer.innerText =
+                    "No answer. Please make another question!";
+                statusContainer.style.display = "block";
                 resultContainer.style.display = "none";
             } else {
                 console.log("has answer for this question");
@@ -163,7 +172,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    article_header: objURLandHeader.article_header,
+                    // article_header: objURLandHeader.article_header,
                     article_url: objURLandHeader.article_url,
                     question: question,
                     best_answer: returnedAnswers.firstReturnedAnswer,
@@ -187,7 +196,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    article_header: objURLandHeader.article_header,
+                    // article_header: objURLandHeader.article_header,
                     article_url: objURLandHeader.article_url,
                     question: question,
                     best_answer: returnedAnswers.secondReturnedAnswer,
@@ -211,7 +220,7 @@ document.addEventListener("DOMContentLoaded", function () {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    article_header: objURLandHeader.article_header,
+                    // article_header: objURLandHeader.article_header,
                     article_url: objURLandHeader.article_url,
                     question: question,
                     best_answer: returnedAnswers.thirdReturnedAnswer,
