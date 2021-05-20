@@ -1,3 +1,4 @@
+/* Reset CSS */
 * {
     padding: 0;
     margin: 0;
@@ -6,19 +7,20 @@
 
 html,
 body {
+    background-color: #f7f7f7;
     /* font-family: "Open Sans", helvetica; */
-    font-family: "Open Sans", cursive;
+    font-family: "Poppins", sans-serif;
     font-size: 14px;
     min-height: 130px;
     width: 500px;
 }
 
-#main {
-    padding: 2px;
-    box-sizing: border-box;
+footer {
+    padding: 5px;
 }
 
 #header {
+    font-family: "Open Sans", cursive;
     height: 70px;
     width: 100%;
     padding: 19px 0px;
@@ -37,20 +39,34 @@ body {
     color: #444;
 }
 
+#main {
+    padding: 2px 5px;
+    box-sizing: border-box;
+}
+
 .form-group {
-    border-top: 1.5px groove rgb(2, 41, 41);
-    border-bottom: 1.5px groove rgb(2, 41, 41);
+    background-color: white;
+    width: 100%;
+    height: 50px;
     display: flex;
     align-items: center;
+    box-shadow: 0 0 5px rgb(209, 209, 209);
+    border-radius: 5px;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.form-group button {
+    display: none;
 }
 
 #search-bar {
     width: 100%;
-    height: 50px;
-    padding: 0px 10px;
-    font-size: 15px;
-    border: rgba(0, 0, 0, 0);
-    outline-style: inherit;
+    height: fit-content;
+    margin: 0px 10px;
+    font-size: 16px;
+    border: none;
+    outline: none;
 }
 
 .button-container {
@@ -58,6 +74,7 @@ body {
     size: 50px;
     display: flex;
     flex-direction: column;
+    display: none;
 }
 
 .button-container i {
@@ -72,5 +89,152 @@ body {
 }
 
 #progress {
-    padding: 15px;
+    min-width: 0;
+}
+
+#progress-bar {
+    position: relative;
+    width: 100%;
+    display: none;
+}
+
+.slider {
+    position: absolute;
+    width: 100%;
+    height: 3px;
+    overflow-x: hidden;
+}
+
+.line {
+    width: 100%;
+    position: absolute;
+    opacity: 0.4;
+    background: #4a8df8;
+    width: 150%;
+    height: 3px;
+}
+
+.subline {
+    width: 100%;
+    position: absolute;
+    background: #4a8df8;
+    height: 3px;
+}
+.inc {
+    animation: increase 2s infinite;
+}
+.dec {
+    animation: decrease 2s 0.5s infinite;
+}
+
+@keyframes increase {
+    from {
+        left: -5%;
+        width: 5%;
+    }
+    to {
+        left: 130%;
+        width: 100%;
+    }
+}
+@keyframes decrease {
+    from {
+        left: -80%;
+        width: 80%;
+    }
+    to {
+        left: 110%;
+        width: 10%;
+    }
+}
+
+.result-container {
+    font-family: "Montserrat", sans-serif;
+    width: 100%;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    padding: 0 10px;
+    margin-top: 15px;
+    display: none;
+}
+
+.result {
+    cursor: pointer;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    padding: 8px 15px 8px 10px;
+    margin: 5px 0;
+    background-color: rgb(225, 240, 255);
+    border-radius: 5px;
+    opacity: 0.9;
+
+    transition: all 0.2s ease;
+}
+
+.result .answer-container {
+    height: 100%;
+    display: flex;
+    margin-left: 2px;
+}
+
+.result .answer-container p {
+    height: 100%;
+    width: 415px;
+    font-size: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: auto;
+}
+
+.result-container input[name="answer-radio"] {
+    display: none;
+}
+
+input[name="answer-radio"]:not(:checked) ~ label[name="label-answer"]:hover {
+    opacity: 1;
+    box-shadow: 0 0 5px rgb(187, 201, 214);
+}
+
+input[name="answer-radio"]:checked ~ label[name="label-answer"] {
+    opacity: 1;
+    box-shadow: 0 0 5px rgb(187, 201, 214);
+}
+
+.result label[name="rate"] {
+    align-self: center;
+    margin-top: -2px;
+    margin-left: auto;
+}
+
+.result label[name="rate"] {
+    cursor: pointer;
+    font-size: 15px;
+    color: #f5a627;
+    opacity: 0.3;
+
+    transition: all 0.2s ease;
+}
+
+input[name="star-radio"]:not(:checked) ~ label[name="rate"]:hover {
+    color: #f5a627;
+    opacity: 0.9;
+}
+
+input[name="star-radio"]:checked ~ label[name="rate"] {
+    color: #f5a627;
+    opacity: 1;
+    text-shadow: 0 0 5px rgb(255, 220, 23);
+}
+
+.result-container input[name="star-radio"] {
+    display: none;
+}
+
+#status {
+    padding-left: 12px;
+    color: rgb(214, 0, 0);
+    display: none;
 }

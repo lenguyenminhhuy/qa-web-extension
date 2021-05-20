@@ -1,0 +1,28 @@
+CREATE DATABASE IF NOT EXISTS best_answer_collection;
+USE best_answer_collection;
+
+----------Query to create tables------------------
+CREATE TABLE IF NOT EXISTS context_urls(
+    id SERIAL NOT NULL PRIMARY KEY,
+    url VARCHAR(500) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS rated_answers(
+    id SERIAL NOT NULL PRIMARY KEY,
+    answer VARCHAR(255) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS questions(
+    id SERIAL NOT NULL PRIMARY KEY,
+    question VARCHAR(255) NOT NULL,
+    rated_answer_id INT NOT NULL,
+    CONSTRAINT fk_question_answer FOREIGN KEY (rated_answer_id) REFERENCES rated_answers(id)
+);
+
+CREATE TABLE IF NOT EXISTS question_context_url(
+    id SERIAL NOT NULL PRIMARY KEY,
+    question_id INT NOT NULL,
+    context_url_id INT NOT NULL,
+    CONSTRAINT fk_question_context FOREIGN KEY (question_id) REFERENCES questions(id),
+    CONSTRAINT fk_context_question FOREIGN KEY (context_url_id) REFERENCES context_urls(id)
+);

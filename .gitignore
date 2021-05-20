@@ -9,3 +9,4 @@ robustqa/__pycache__/
 .idea
 *.mar
 serve_model/model/*
+artifacts/
