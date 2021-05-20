@@ -1,0 +1,5 @@
+tqdm==4.49.0
+tensorboard
+tensorflow
+tensorboardX
+wandb

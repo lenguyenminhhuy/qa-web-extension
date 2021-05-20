@@ -186,6 +186,8 @@ class Trainer():
             results = util.eval_dicts(data_dict, preds)
             results_list = [('F1', results['F1']),
                             ('EM', results['EM'])]
+            wandb.log({"F1": results["F1"]})
+            wandb.log({"EM": results["EM"]})
         else:
             results_list = [('F1', -1.0),
                             ('EM', -1.0)]
@@ -229,19 +231,20 @@ class Trainer():
                         for k, v in curr_score.items():
                             tbx.add_scalar(f'val/{k}', v, global_idx)
                         self.log.info(f'Eval {results_str}')
-                        if self.visualize_predictions:
-                            util.visualize(tbx,
-                                           pred_dict=preds,
-                                           gold_dict=val_dict,
-                                           step=global_idx,
-                                           split='val',
-                                           num_visuals=self.num_visuals)
+                        # if self.visualize_predictions:
+                        util.visualize(tbx,
+                                        pred_dict=preds,
+                                        gold_dict=val_dict,
+                                        step=global_idx,
+                                        split='val',
+                                        num_visuals=self.num_visuals)
                         if curr_score['F1'] >= best_scores['F1']:
                             best_scores = curr_score
                             self.save(model)
                         # Log to wandb    
                         wandb.log({"loss": loss}, step=global_idx)
                         wandb.log({"F1": curr_score["F1"]}, step=global_idx)
+                        wandb.log({"EM": curr_score["EM"]}, step=global_idx)
                     global_idx += 1
         return best_scores
 
@@ -261,10 +264,10 @@ def main():
     args = get_train_test_args()
 
     util.set_seed(args.seed)
-    model = DistilBertForQuestionAnswering.from_pretrained("distilbert-base-uncased")
-    tokenizer = DistilBertTokenizerFast.from_pretrained('distilbert-base-uncased')
-    with wandb.init(project="qa-system", config=args):
-        wandb.run.name = args.run_name
+    model = DistilBertForQuestionAnswering.from_pretrained(args.model_checkpoint)
+    tokenizer = DistilBertTokenizerFast.from_pretrained(args.model_checkpoint)
+    with wandb.init(project="qa-system", config=args) as run:
+        run.name = args.run_name
         wandb.watch(model)
         if args.do_train:
             if not os.path.exists(args.save_dir):
@@ -277,7 +280,7 @@ def main():
             trainer = Trainer(args, log)
             train_dataset, _ = get_dataset(args, args.train_datasets, args.train_dir, tokenizer, 'train')
             log.info("Preparing Validation Data...")
-            val_dataset, val_dict = get_dataset(args, args.train_datasets, args.val_dir, tokenizer, 'val')
+            val_dataset, val_dict = get_dataset(args, args.val_datasets, args.val_dir, tokenizer, 'val')
             train_loader = DataLoader(train_dataset,
                                     batch_size=args.batch_size,
                                     sampler=RandomSampler(train_dataset))
@@ -285,14 +288,22 @@ def main():
                                     batch_size=args.batch_size,
                                     sampler=SequentialSampler(val_dataset))
             best_scores = trainer.train(model, train_loader, val_loader, val_dict)
-            wandb.save(os.path.join(args.save_dir, 'checkpoint'))
+            model_artifact = wandb.Artifact(
+                args.run_name, type="model",
+            )
+            model_artifact.add_dir(os.path.join(args.save_dir, 'checkpoint'))
+            run.log_artifact(model_artifact)
+
         if args.do_eval:
             args.device = torch.device('cuda') if torch.cuda.is_available() else torch.device('cpu')
             split_name = 'test' if 'test' in args.eval_dir else 'validation'
             log = util.get_logger(args.save_dir, f'log_{split_name}')
             trainer = Trainer(args, log)
-            checkpoint_path = os.path.join(args.save_dir, 'checkpoint')
-            model = DistilBertForQuestionAnswering.from_pretrained(checkpoint_path)
+            if args.checkpoint_path != "":
+                model = DistilBertForQuestionAnswering.from_pretrained(args.checkpoint_path)
+            else:
+                checkpoint_path = os.path.join(args.save_dir, 'checkpoint')
+                model = DistilBertForQuestionAnswering.from_pretrained(checkpoint_path)
             model.to(args.device)
             eval_dataset, eval_dict = get_dataset(args, args.eval_datasets, args.eval_dir, tokenizer, split_name)
             eval_loader = DataLoader(eval_dataset,

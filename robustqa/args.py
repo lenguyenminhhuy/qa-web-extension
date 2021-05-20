@@ -11,6 +11,7 @@ def get_train_test_args():
     parser.add_argument('--train', action='store_true')
     parser.add_argument('--eval', action='store_true')
     parser.add_argument('--train-datasets', type=str, default='squad,nat_questions,newsqa')
+    parser.add_argument('--val-datasets', type=str, default='squad,nat_questions,newsqa')
     parser.add_argument('--run-name', type=str, default='multitask_distilbert')
     parser.add_argument('--recompute-features', action='store_true')
     parser.add_argument('--train-dir', type=str, default='datasets/indomain_train')
@@ -22,5 +23,7 @@ def get_train_test_args():
     parser.add_argument('--sub-file', type=str, default='')
     parser.add_argument('--visualize-predictions', action='store_true')
     parser.add_argument('--eval-every', type=int, default=5000)
+    parser.add_argument('--checkpoint_path', type=str, default="")
+    parser.add_argument('--model_checkpoint', type=str, default="distilbert-base-uncased")
     args = parser.parse_args()
     return args

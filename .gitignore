@@ -1,2 +1,12 @@
 serveModel/
 datasets/
+robustqa/robustqa-baseline-01/
+robustqa/save/
+robustqa/wandb/
+robustqa/.DS_Store
+robustqa/__pycache__/
+.DS_Store
+.idea
+*.mar
+serve_model/model/*
+artifacts/
