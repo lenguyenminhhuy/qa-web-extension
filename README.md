@@ -7,6 +7,8 @@ As the amount of online content continues to explode, people need a better way t
 
 There are three main components in the software architecture of our system: web extension, web server, and database server. The user has three ways to interact with the system via the web extension. 
 
+<img width="611" alt="Screen Shot 2021-06-03 at 00 53 13" src="https://user-images.githubusercontent.com/54904166/120531502-e541a880-c408-11eb-99da-a87509e9d9a3.png">
+
 Firstly, the user can insert his question(s) to the extension by typing the text input to the UI. After the user hits “Enter,” the extension will process the web content (context) and send it along with the inserted question to the prediction service in the webserver. The prediction service then generates the answers based on the received input and sends it back to the extension. The extension uses them to update the UI. 
 
 Secondly, the user can choose to highlight a particular answer displayed in UI by clicking on it. The extension then scrolls the web page to the position of that answer and highlights it.
@@ -16,7 +18,9 @@ Finally, the user can rate the best answer for his question by clicking on the �
 
 ## Demonstration
 
-• The QA Extension has correctly predicted two out of three returned answers. The result also indicates that the model is able to understand the relation between "Priyamvada Gopal" and "her" in the context given by the article named "The ‘free speech’ law will make university debate harder, not easier". 
+<img width="977" alt="Screen Shot 2021-05-26 at 18 41 26" src="https://user-images.githubusercontent.com/54904166/120531729-26d25380-c409-11eb-9814-2ed8fe5b7175.png">
+
+• The QA Extension has correctly predicted two out of three returned answers. The result also indicates that the model is able to understand the relation between "Priyamvada Gopal" and "her" in the context given by the article named "*The ‘free speech’ law will make university debate harder, not easier*". 
 
 • The extension also allows users to rate the best answer by selecting the star button.
 
@@ -75,14 +79,16 @@ Now the path to “localhost.pem” and “localhost-key.pem” is C:\Users\ you
 1.    Install Docker Desktop https://docs.docker.com/docker-for-mac/install/
 2.    Open Docker Desktop
 3.    Open Terminal, use this command to start the model.
-```docker run -p 5000:5000 leemii18/serve-model:0.1
+```
+docker run -p 5000:5000 leemii18/serve-model:0.1
 ```
 
 -    For Windows:
 1.    Install Docker https://docs.docker.com/docker-for-windows/install/ 
 2.    Open Docker Desktop
 3.    Open PowerShell or CMD, use this command to start the model.
-```docker run -p 5000:5000 leemii18/serve-model:0.1
+```
+docker run -p 5000:5000 leemii18/serve-model:0.1
 ```
 
 
