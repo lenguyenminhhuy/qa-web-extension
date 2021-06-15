@@ -6,8 +6,9 @@ As the amount of online content continues to explode, people need a better way t
 ## System architecture
 
 There are three main components in the software architecture of our system: web extension, web server, and database server. The user has three ways to interact with the system via the web extension. 
-
+<p align="center">
 <img width="611" alt="Screen Shot 2021-06-03 at 00 53 13" src="https://user-images.githubusercontent.com/54904166/120531502-e541a880-c408-11eb-99da-a87509e9d9a3.png">
+</p>
 
 Firstly, the user can insert his question(s) to the extension by typing the text input to the UI. After the user hits “Enter,” the extension will process the web content (context) and send it along with the inserted question to the prediction service in the webserver. The prediction service then generates the answers based on the received input and sends it back to the extension. The extension uses them to update the UI. 
 
