@@ -95,7 +95,7 @@ docker run -p 5000:5000 leemii18/serve-model:0.1
 
 3/ **Setup the extension in Google Chrome**
 
-HHM’s QA extension currently can be used on many devices without any requirement about the type or version of operating system. Besides that, the extension is developed based on the JavaScript IPA that Chrome provides, so to install and use it in the most stable way, user’s devices must have Google Chrome browser. Now, the way to install is through the source code provided here: https://github.com/lenguyenminhhuy/SEPM-Team24. 
+HHM’s QA extension currently can be used on many devices without any requirement about the type or version of operating system. Besides that, the extension is developed based on the JavaScript IPA that Chrome provides, so to install and use it in the most stable way, user’s devices must have Google Chrome browser. Now, the way to install is through the source code provided here: https://github.com/lenguyenminhhuy/qa-web-extension. 
 
 1.    Clone the source code at Github link above.
 
@@ -108,7 +108,7 @@ HHM’s QA extension currently can be used on many devices without any requireme
 
 3.    Go to extension setting, there are 2 ways to access extension setting in Google Chrome.
 a.    Paste and go to chrome://extensions.
-b.    At the top right, click     -> More tools -> Extensions.
+b.    At the top right, click   -> More tools -> Extensions.
 
 
 4.    Check “Developer mode” at top right of page.
